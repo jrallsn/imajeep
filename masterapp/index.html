@@ -22,8 +22,8 @@
 		function sendMessage() {
 			var messageBox = document.getElementById('messagebox');
 			var textToSend = messageBox.value;
-			var roomIdBox = document.getElementById('roomidbox');
-			var roomId = roomIdBox.value;
+			/*var roomIdBox = document.getElementById('roomidbox');
+			var roomId = roomIdBox.value;*/
 
 			exampleSocket.send(JSON.stringify({
 				action: 'testMsg',

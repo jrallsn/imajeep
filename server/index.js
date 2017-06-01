@@ -75,7 +75,7 @@ wss.on('connection', function connection(ws) {
         };
 
   		ws.send(JSON.stringify({
-  			action: 'roomCreated',
+  			info: 'roomCreated',
   			roomId: roomId
   		}));
   	}
