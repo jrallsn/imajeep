@@ -5,5 +5,7 @@ www.seawall.horse/p seawall.horse/p {
 	root ./playerapp
 }
 api.seawall.horse {
-   proxy / localhost:3000
+   proxy / localhost:3000 {
+      websocket
+   }
 }
