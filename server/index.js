@@ -8,7 +8,7 @@ function generateId() {
 
     var uid = '';
     for (var i = 0; i < len; i++) {
-        uid += UidCharacterSets[charSet].charAt(Math.floor(Math.random() * UidCharacterSets[charSet].length));
+        uid += charSet.charAt(Math.floor(Math.random() * charSet.length));
     }
 
     return uid;
@@ -46,7 +46,7 @@ wss.on('connection', function connection(ws) {
   		for (var i = 0; i < activeRooms[roomId].length; i++){
   			var socket = activeRooms[roomId][i];
   			socket.send(JSON.stringify({
-  				message: msg
+  				message: content 
   			}));
   		}
   	}
@@ -67,5 +67,5 @@ wss.on('connection', function connection(ws) {
     	}
   	});
 
-  	ws.send('something');
+  	//ws.send('something');
 });

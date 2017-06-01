@@ -22,7 +22,7 @@
 		function sendMessage() {
 			var messageBox = document.getElementById('messagebox');
 			var textToSend = messageBox.value;
-			var roomIdBox = document.getElementById('roomid');
+			var roomIdBox = document.getElementById('roomidbox');
 			var roomId = roomIdBox.value;
 
 			exampleSocket.send(JSON.stringify({
@@ -34,7 +34,7 @@
 
 		exampleSocket.onmessage = function(event){
 			console.log(event.data);
-			document.getElementById('response-div').innerHTML = text;
+			document.getElementById('response-div').innerHTML = event.data;
 		};
 	</script>
 	<br>

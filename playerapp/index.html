@@ -37,7 +37,7 @@
 
 		exampleSocket.onmessage = function(event){
 			console.log(event.data);
-			document.getElementById('response-div').innerHTML = text;
+			document.getElementById('response-div').innerHTML = event.data;
 		};
 	</script>
 	<br>
