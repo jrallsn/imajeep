@@ -101,7 +101,7 @@ wss.on('connection', function connection(ws) {
                 state: activeRooms[roomId].state
             };
 
-            updateAllClients(gameUpdate);
+            updateAllClients(roomId, gameUpdate);
   		} else {
 
   		}
