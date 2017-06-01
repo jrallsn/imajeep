@@ -539,7 +539,7 @@ wss.on('connection', function connection(ws) {
         }
     	var action = data.action;
         if(data.roomId && !activeRooms[data.roomId]){
-            console.error('Attempted action ' + data.action + ' but Room ID ' + roomId + ' not initialized');
+            console.error('Attempted action ' + data.action + ' but Room ID ' + data.roomId + ' not initialized');
             return;
         }
 
