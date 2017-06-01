@@ -1,6 +1,8 @@
-www.seawall.horse seawall.horse {
-   root /srv/www
-
+www.seawall.horse/m seawall.horse/m {
+   root ./masterapp
+}
+www.seawall.horse/p seawall.horse/p {
+	root ./playerapp
 }
 api.seawall.horse {
    proxy / localhost:3000
