@@ -11,7 +11,19 @@
 		exampleSocket.onopen = function(event) {
 			console.log('opened socket');
 		};
+
+		function aClickThing() {
+			exampleSocket.send('hi');
+		}
+
+		exampleSocket.onmessage = function(event){
+			console.log(event.data);
+		};
 	</script>
+
+	<button onclick="aClickThing()">woop</button>
+
+	<div id="response"></div>
 
 </body>
 </html>
