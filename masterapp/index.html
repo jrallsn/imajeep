@@ -7,23 +7,44 @@
 	<script type="text/javascript">
 		
 		var exampleSocket = new WebSocket("wss://api.seawall.horse/");
+		var activeRoomId;
 
 		exampleSocket.onopen = function(event) {
 			console.log('opened socket');
 		};
 
-		function aClickThing() {
-			exampleSocket.send('hi');
+		function createRoom() {
+			exampleSocket.send(JSON.stringify({
+				action: 'init'
+			}));
+		}
+
+		function sendMessage() {
+			var messageBox = document.getElementById('messagebox');
+			var textToSend = messageBox.value;
+			var roomIdBox = document.getElementById('roomid');
+			var roomId = roomIdBox.value;
+
+			exampleSocket.send(JSON.stringify({
+				action: 'testMsg',
+				message: textToSend,
+				roomId: roomId
+			}));
 		}
 
 		exampleSocket.onmessage = function(event){
 			console.log(event.data);
+			document.getElementById('response-div').innerHTML = text;
 		};
 	</script>
-
-	<button onclick="aClickThing()">woop</button>
-
-	<div id="response"></div>
+	<br>
+	<button onclick="createRoom()">Create a room</button>
+	<br>
+	<input type="text" id="messagebox">
+	<input type="text" id="roomidbox">
+	<button onclick="sendMessage()">Send message</button>
+	<br> 
+	<div id="response-div"></div>
 
 </body>
 </html>
