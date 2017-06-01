@@ -28,12 +28,21 @@
 			exampleSocket.send(JSON.stringify({
 				action: 'testMsg',
 				message: textToSend,
-				roomId: roomId
+				roomId: activeRoomId
 			}));
 		}
 
 		exampleSocket.onmessage = function(event){
 			console.log(event.data);
+			try {
+				var data = JSON.parse(event.data);
+				if(data.info === 'roomCreated'){
+					activeRoomId = data.roomId;
+					document.getElementById('roomiddiv').innerHTML = activeRoomId;
+				}
+			} catch (e) {
+
+			}
 			document.getElementById('response-div').innerHTML = event.data;
 		};
 	</script>
@@ -41,7 +50,7 @@
 	<button onclick="createRoom()">Create a room</button>
 	<br>
 	<input type="text" id="messagebox">
-	<input type="text" id="roomidbox">
+	ROOM: <div id="roomiddiv"></div>
 	<button onclick="sendMessage()">Send message</button>
 	<br> 
 	<div id="response-div"></div>
