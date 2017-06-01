@@ -3,7 +3,8 @@ const WebSocket = require('ws');
 const wss = new WebSocket.Server({ port: 3000 });
 var JeepDbAdapter = require('./jeepdb.js');
 
-const votingTimeLimit = 60000;  // default time limit in ms
+const votingTimeLimit = 10000;  // default time limit in ms
+const submissionTimeLimit = 60000;
 const resultsDisplayTime = 10000; // time to display results in ms
 const actionItemCompleteProportion = 0.75;
 
@@ -17,10 +18,12 @@ const GameStates = {
     SUBMIT_SADS: 'SUBMIT_SADS',
     DISCUSS_SADS: 'DISCUSS_SADS',
     VOTE_SADS: 'VOTE_SADS',
+    VIEW_ALL_SADS: 'VIEW_ALL_SADS',
     CREATE_ACTION_ITEMS: 'CREATE_ACTION_ITEMS',
     SUBMIT_HAPPIES: 'SUBMIT_HAPPIES',
     DISCUSS_HAPPIES: 'DISCUSS_HAPPIES',
-    VOTE_HAPPIES: 'VOTE_HAPPIES'
+    VOTE_HAPPIES: 'VOTE_HAPPIES',
+    VIEW_ALL_HAPPIES: 'VIEW_ALL_HAPPIES'
 };
 
 function generateId() {
@@ -198,7 +201,8 @@ wss.on('connection', function connection(ws) {
             info: 'startVoting',
             roomId: roomId,
             itemInfo: activeRooms[roomId].currentActionItem.description,
-            timeLimit: votingTimeLimit
+            timeLimit: votingTimeLimit,
+            whoVoted: activeRooms[roomId].voteReceived
         };
 
         activeRooms[roomId].timer = setTimeout(function(){
@@ -242,6 +246,7 @@ wss.on('connection', function connection(ws) {
         var masterUpdate = {
             info: 'votingEnded',
             roomId: roomId,
+            state: activeRooms[roomId].state,
             whoVoted: activeRooms[roomId].voteReceived,
             itemInfo: actionItem.text,
             voteResult: votingResultText,
@@ -276,6 +281,16 @@ wss.on('connection', function connection(ws) {
             }
         }
 
+        var masterUpdate = {
+            info: 'voteReceived',
+            roomId: roomId,
+            state: activeRooms[roomId].state,
+            userName: userName,
+            whoVoted: activeRooms[roomId].voteReceived
+        };
+
+        updateMasterClient(roomId, masterUpdate);
+
         if(allVotesReceived) {
             endVoting (roomId);
         }
@@ -301,21 +316,217 @@ wss.on('connection', function connection(ws) {
 
         updateMasterClient(roomId, masterUpdate);
 
-        setTimeout(startFeels(roomId), resultsDisplayTime);
+        setTimeout(startSads(roomId), resultsDisplayTime);
     }
 
-    function startFeels(roomId) {
+    function startSads(roomId) {
+        activeRooms[roomId].state = GameStates.SUBMIT_SADS;
+        activeRooms[roomId].feedbackItems = [];
+        activeRooms[roomId].feedbackReceived = {};
 
+        for(var i = 0; i < activeRooms[roomId].players.length; i++){
+            activeRooms[roomId].feedbackReceived[activeRooms[roomId].players[i].playerName] = false;
+        }
+
+        var gameUpdate = {
+            info: 'startSubmittingSads',
+            roomId: roomId,
+            state: activeRooms[roomId].state,
+            timeLimit: submissionTimeLimit,
+            whoSubmitted: activeRooms[roomId].feedbackReceived
+        };
+
+        updateAllClients(roomId, gameUpdate);
+
+        activeRooms[roomId].timer = setTimeout(function(){
+            endSubmittingSads(roomId);
+        }, submissionTimeLimit);
+    }
+
+    function startHappies(roomId) {
+        activeRooms[roomId].state = GameStates.SUBMIT_HAPPIES;
+        activeRooms[roomId].feedbackItems = [];
+        activeRooms[roomId].feedbackReceived = {};
+
+        for(var i = 0; i < activeRooms[roomId].players.length; i++){
+            activeRooms[roomId].feedbackReceived[activeRooms[roomId].players[i].playerName] = false;
+        }
+
+        var gameUpdate = {
+            info: 'startSubmittingHappies',
+            roomId: roomId,
+            state: activeRooms[roomId].state,
+            timeLimit: submissionTimeLimit,
+            whoSubmitted: activeRooms[roomId].feedbackReceived
+        };
+
+        updateAllClients(roomId, gameUpdate);
+
+        activeRooms[roomId].timer = setTimeout(function(){
+            endSubmittingHappies(roomId);
+        }, submissionTimeLimit);
+    }
+
+    function submitFeedback(roomId, userName, feedback) {
+        activeRooms[roomId].feedbackItems.push(feedback);
+        activeRooms[roomId].feedbackReceived[userName] = true;
+
+        var masterUpdate = {
+            info: 'feedbackReceived',
+            roomId: roomId,
+            state: activerooms[roomId].state,
+            whoSubmitted: activeRooms[roomId].feedbackReceived
+        };
+
+        updateMasterClient(roomId, masterUpdate);
+
+        if (activeRooms[roomId].state === GameStates.SUBMIT_SADS){
+
+        } else if (activeRooms[roomId].state === GameStates.SUBMIT_HAPPIES) {
+
+        }
+    }
+
+    function endSubmittingSads(roomId) {
+        clearTimeout(activeRooms[roomId].timer);
+        activeRooms[roomId].state = GameStates.DISCUSS_SADS;
+
+        var gameUpdate = {
+            info: 'discussSads',
+            roomId: roomId,
+            state: activerooms[roomId].state,
+            whoSubmitted: activeRooms[roomId].feedbackReceived,
+            feedbackItems: activeRooms[roomId].feedbackItems
+        };
+
+        updateAllClients(roomId, gameUpdate);
+    }
+
+    function endSubmittingHappies(roomId) {
+        clearTimeout(activeRooms[roomId].timer);
+        activeRooms[roomId].state = GameStates.DISCUSS_HAPPIES;
+
+        var gameUpdate = {
+            info: 'discussHappies',
+            roomId: roomId,
+            state: activerooms[roomId].state,
+            whoSubmitted: activeRooms[roomId].feedbackReceived,
+            feedbackItems: activeRooms[roomId].feedbackItems
+        };
+
+        updateAllClients(roomId, gameUpdate);
+    }
+
+    function initSadsVoting(roomId) {
+        activeRooms[roomId].state = GameStates.VOTE_SADS;
+
+        var feedbackItems = activeRooms[roomId].feedbackItems;
+        activeRooms[roomId].feedbackItemsToRate = feedbackItems;
+        activeRooms[roomId].voteReceived = {};
+        activeRooms[roomId].feedbackItemsCount = feedbackItems.length;
+
+        for(var i = 0; i < activeRooms[roomId].players.length; i++){
+            activeRooms[roomId].voteReceived[activeRooms[roomId].players[i].playerName] = false;
+        }
+
+        startSadsVoting(roomId);
+    }
+
+    function startSadsVoting(roomId) {
+        if (activeRooms[roomId].feedbackItemsToRate.length === 0) {
+            endSadsPhase(roomId);
+            return;
+        }
+
+        for(var userName in activeRooms[roomId].voteReceived) {
+            if(!activeRooms[roomId].voteReceived.hasOwnProperty(userName)){
+                continue;
+            }
+
+            activeRooms[roomId].voteReceived[userName] = false;
+        }
+        activeRooms[roomId].votes = {};
+
+        activeRooms[roomId].currentFeedbackItem = activeRooms[roomId].feedbackItemsToRate.pop();
+
+        var gameUpdate = {
+            info: 'startSadsVoting',
+            roomId: roomId,
+            itemInfo: activeRooms[roomId].currentFeedbackItem,
+            timeLimit: votingTimeLimit,
+            whoVoted: activeRooms[roomId].voteReceived
+        };
+
+        activeRooms[roomId].timer = setTimeout(function(){
+            endSadsVoting(roomId);
+        }, votingTimeLimit);
+
+        updateAllClients(roomId, gameUpdate);
+    }
+
+    function endSadsVoting (roomId) {
+        clearTimeout(activeRooms[roomId].timer);
+
+        var playerUpdate = {
+            info: 'sadsVotingEnded',
+            roomId: roomId
+        };
+
+        updateAllPlayers(roomId, playerUpdate);
+
+        var totalVote = 0;
+
+        for(var uname in activeRooms[roomId].votes){
+            if(!activeRooms[roomId].votes.hasOwnProperty(uname)){
+                continue;
+            }
+
+            totalVote += activeRooms[roomId].votes[uname];
+        }
+
+        var votingResultText = totalVote + ' / ' + activeRooms[roomId].players.length;
+
+        var masterUpdate = {
+            info: 'sadsVotingEnded',
+            roomId: roomId,
+            state: activeRooms[roomId].state,
+            whoVoted: activeRooms[roomId].voteReceived,
+            itemInfo: actionItem.text,
+            voteResult: votingResultText,
+            displayTime: resultsDisplayTime
+        };
+
+        updateMasterClient(roomId, masterUpdate);
+
+        setTimeout(startVoting(roomId), resultsDisplayTime);
+    }
+
+    function endSadsPhase (roomId) {
+        delete activeRooms[roomId].voteReceived;
+        delete activeRooms[roomId].votes;
+
+        activeRooms[roomId].state = GameStates.VIEW_ALL_SADS;
+
+        var masterUpdate = {
+            info: 'sadsResults',
+            roomId: roomId,
+            state: activeRooms[roomId].state,
+            actionItemsCompletedNumber: activeRooms[roomId].actionItemsCompleted,
+            actionItemsTotalNumber: activeRooms[roomId].actionItemsCount,
+            displayTime: resultsDisplayTime
+        };
+
+        delete activeRooms[roomId].actionItemsCompleted;
+        delete activeRooms[roomId].actionItemsCount;
+
+        updateMasterClient(roomId, masterUpdate);
+
+        setTimeout(startSads(roomId), resultsDisplayTime);
     }
 
   	function testMsg(roomId, content){
-  		for (var i = 0; i < activeRooms[roomId].length; i++){
-  			var socket = activeRooms[roomId][i];
-  			socket.send(JSON.stringify({
-  				message: content 
-  			}));
-  		}
-  	}
+        updateAllClients(roomId, {message: content});
+ 	}
 
 	ws.on('message', function incoming(message) {
     	console.log('received: %s', message);
@@ -361,8 +572,15 @@ wss.on('connection', function connection(ws) {
                 recordVote(data.roomId, data.userName, data.vote);
                 break;
             case 'submitFeedback':
+                submitFeedback(data.roomId, data.userName, data.feedback);
                 break;
             case 'createActionItem':
+                break;
+            case 'startSadsVoting':
+                initSadsVoting(data.roomId);
+                break;
+            case 'startHappiesVoting':
+                startHappiesVoting(data.roomId);
                 break;
         }
 
