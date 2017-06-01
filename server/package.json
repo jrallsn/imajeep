@@ -1,0 +1,22 @@
+{
+  "name": "jeepserver",
+  "version": "1.0.0",
+  "description": "beep beep im a jeep",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/jrallsn/imajeep.git"
+  },
+  "author": "beep beep im a jeep",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jrallsn/imajeep/issues"
+  },
+  "homepage": "https://github.com/jrallsn/imajeep#readme",
+  "dependencies": {
+    "ws": "^3.0.0"
+  }
+}

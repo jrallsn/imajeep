@@ -1,1 +1,17 @@
-MASTER APP INDEX
+<html>
+<head>
+</head>
+<body>
+	MASTER APP INDEX
+
+	<script type="text/javascript">
+		
+		var exampleSocket = new WebSocket("ws://api.seawall.horse/");
+
+		exampleSocket.onopen = function(event) {
+			console.log('opened socket');
+		};
+	</script>
+
+</body>
+</html>
