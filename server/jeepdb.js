@@ -30,5 +30,8 @@ module.exports = {
 	},
 	actionItemComplete: function(actionID) {
 		db.run("UPDATE actions SET status=1 WHERE actionID=" + actionID);
+	},
+	addActionItem: function(description, teamID) {
+		db.run("INSERT INTO actions (description, teamID, status) VALUES ('" + description + "', " + teamID + ")");
 	}
 };
