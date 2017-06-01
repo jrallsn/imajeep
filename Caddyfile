@@ -1,0 +1,7 @@
+www.seawall.horse seawall.horse {
+   root /srv/www
+
+}
+api.seawall.horse {
+   proxy / localhost:3000
+}
