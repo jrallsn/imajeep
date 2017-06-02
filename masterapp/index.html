@@ -5,7 +5,7 @@
   <link href="https://fonts.googleapis.com/css?family=Pacifico|Ubuntu" rel="stylesheet">
 </head>
 <body>
-	<div id="title">MASTER APP INDEX</div>
+	<div id="title">BEEP BEEP IM A JEEP</div>
 
 	<script type="text/javascript">
 		
@@ -48,12 +48,12 @@
 				var data = JSON.parse(event.data);
 				if(data.info === 'roomCreated'){
 					activeRoomId = data.roomId;
-					document.getElementById('roomiddiv').innerHTML = activeRoomId;
+					document.getElementById('roomiddiv').innerHTML = "Room code: " + activeRoomId;
 				}
 			} catch (e) {
 
 			}
-			document.getElementById('response-div').innerHTML = event.data;
+			//document.getElementById('response-div').innerHTML = event.data;
 
 			var message = JSON.parse(event.data);
 
@@ -65,9 +65,9 @@
 						players.push({
 							userName: message.userName
 						});
+						displayPlayers();
 					}
 					
-					displayPlayers();
 				
 					break;
 				case 'SHOW_OLD_ACTION_ITEMS_LIST':
@@ -81,7 +81,7 @@
 						document.getElementById('actionItem').innerHTML += message.itemInfo + "<br>";
 						document.getElementById('voteResults').style.display = "none";
 					} else { 
-						document.getElementById('actionItem').innerHTML = "";
+						document.getElementById('actionItem').style.display = "none";
 						document.getElementById('beginVoting').style.display = "none";
 						document.getElementById('voteResults').style.display = "";
 						document.getElementById('voteResults').innerHTML = message.voteResult + " voted happy for this item <br>";
@@ -112,12 +112,18 @@
                                                 document.getElementById('actionItem').innerHTML += message.itemInfo + "<br>";
                                                 document.getElementById('voteResults').style.display = "none";
                                         } else { 
-                                                document.getElementById('actionItem').innerHTML = "";
+                                                document.getElementById('actionItem').style.display = "none";
                                                 document.getElementById('beginVoting').style.display = "none";
                                                 document.getElementById('voteResults').style.display = "";
                                                 document.getElementById('voteResults').innerHTML = message.voteResult + " voted happy for this item <br>";
                                         }
 					break;
+				case 'VIEW_ALL_SADS':
+					document.getElementById('voteResults').style.display = "none";
+					document.getElementById('sadsResults').style.display = "";
+					message.feedback.forEach(function(feedback) {
+						document.getElementById('sadsResults').innerHTML += feedback.feedbackText + " -- score: " + feedback.score + "<br>";
+					});
 				default:
 					break;
 			}
@@ -201,12 +207,10 @@
 
 	</script>
 	<div id="createroom">
+	<input type="text" id="messagebox" placeholder="Your team name"><br>
 	<button onclick="createRoom()">Create a room</button>
 	<br>
-	<input type="text" id="messagebox">
-	ROOM: <div id="roomiddiv"></div>
-	<button onclick="sendMessage()">Send message</button>
-	<br> 
+	<div id="roomiddiv"></div>
 	</div>
 	<div id="response-div"></div>
 	
@@ -248,5 +252,8 @@
 	<div id='sadsList' style="display:none"></div>
 	<div id='sadsVoteButton' style="display:none">
 	<button onclick="sadsVoting()">Vote</button></div>
+
+	<div id='sadsResults' style="display:none">Results:<br></div>
+	<div id='waiting' style="display:none"><img src="dancing.gif"></div>
 </body>
 </html>
