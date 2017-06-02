@@ -284,6 +284,13 @@
 			}));
 		}
 
+		function startNewActionItemsPhase(){
+			exampleSocket.send(JSON.stringify({
+				action: 'startActionItemCreation',
+				roomId: activeRoomId
+			}));
+		}
+
 		function sendNewActionItem() {
 			var actionItemBox = document.getElementById('newactionitembox');
 			var actionItem = actionItemBox.value;
@@ -339,7 +346,7 @@
 					continue;
 				}
 
-				text += 'player: ';
+				text += player + ': ';
 				if(playermap[player]){
 					text += '!';
 				} else {
@@ -405,7 +412,9 @@
 	<div id='sadsVoteButton' style="display:none">
 	<button onclick="sadsVoting()">Vote</button></div>
 
-	<div id='sadsResults' style="display:none">Results:<br></div>
+	<div id='sadsResults' style="display:none">Results:<br>
+	<button onclick="startNewActionItemsPhase()">Done</button>
+	</div>
 
 	<div id='submitHappies' style="display:none">Start submitting happies!</div>
 	
