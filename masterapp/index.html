@@ -100,6 +100,7 @@
 						document.getElementById('beginVoting').style.display = "none";
 						document.getElementById('voteResults').style.display = "";
 						document.getElementById('voteResults').innerHTML = message.voteResult + " voted happy for this item <br>";
+						hideTimer();
 					}
 					break;
 				case 'SHOW_ACTION_ITEMS_RESULTS':
@@ -144,6 +145,7 @@
                         document.getElementById('beginVoting').style.display = "none";
                         document.getElementById('voteResults').style.display = "";
                         document.getElementById('voteResults').innerHTML = message.voteResult + " voted happy for this item <br>";
+                        hideTimer();
                     }
 					break;
 				case 'VIEW_ALL_SADS':
@@ -195,6 +197,7 @@
                         document.getElementById('beginVoting').style.display = "none";
                         document.getElementById('voteResults').style.display = "";
                         document.getElementById('voteResults').innerHTML = message.voteResult + " voted happy for this item <br>";
+                        hideTimer();
                     }
 					break;
 				case 'VIEW_ALL_HAPPIES':
