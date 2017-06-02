@@ -154,13 +154,15 @@
 					document.getElementById('voteResults').style.display = "none";
 					document.getElementById('actionItem').style.display = "none";
 					document.getElementById('sadsResults').style.display = "";
+					hideTimer();
 					message.feedback.forEach(function(feedback) {
 						document.getElementById('sadsResults').innerHTML += feedback.feedbackText + " -- score: " + feedback.score + "<br>";
 					});
 					break;
 				case 'CREATE_ACTION_ITEMS':
 					document.getElementById('playersubmissionstatus').style.display = "none";
-					document.getElementById('sadsResults').style.display = "none";
+					//document.getElementById('sadsResults').style.display = "none";
+					hideTimer();
 					document.getElementById('newActionItemSection').style.display = "";
 					break;
 				case 'SUBMIT_HAPPIES':
@@ -204,6 +206,7 @@
 					document.getElementById('actionItem').style.display = "none";
 					document.getElementById('voteResults').style.display = "none";
 					document.getElementById('happiesResults').style.display = "";
+					hideTimer();
 					message.feedback.forEach(function(feedback) {
 						document.getElementById('happiesResults').innerHTML += feedback.feedbackText + " -- score: " + feedback.score + "<br>";
 					});
