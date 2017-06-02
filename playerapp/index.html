@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <html>
 <head>
 </head>
@@ -58,3 +59,124 @@
 
 
 
+=======
+<html>
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+  <style>
+body {
+    background-color: #45B29D;
+}
+</style>
+
+</head>
+<body>
+  PLAYER APP INDEX
+
+  <script type="text/javascript">
+    
+    var exampleSocket = new WebSocket("wss://api.seawall.horse/");
+    var activeRoomId;
+    var reVote = /start.*Voting/;
+    var reSub = /startSubmitting.*/;
+
+    exampleSocket.onopen = function(event) {
+      console.log('opened socket');
+    };
+    function joinRoom() {
+      var roomIdBox = document.getElementById('roomid');
+      var userNameBox = document.getElementById('username');
+      var roomId = roomIdBox.value;
+      var userName = userNameBox.value;
+      activeRoomId = roomId;
+      activeUserName = userName;
+      exampleSocket.send(JSON.stringify({
+        action: 'join',
+        roomId: roomId,
+        userName: userName
+      }));
+      $("#join").hide();
+    }
+    function sendMessage() {
+      var messageBox = document.getElementById('messagebox');
+      var textToSend = messageBox.value;
+      exampleSocket.send(JSON.stringify({
+        action: 'submitFeedback',
+        feedback: textToSend,
+        roomId: activeRoomId,
+        userName: activeUserName
+      }));
+      $("#messagebox").val("");
+    }
+    function sendVote(vote) {
+      exampleSocket.send(JSON.stringify({
+        action: 'submitVote',
+        roomId: activeRoomId,
+        userName: activeUserName,
+        vote: vote
+      }));
+      $("#faces").hide();
+      document.getElementById('response-div').innerHTML = "";
+    }
+
+    exampleSocket.onmessage = function(event){
+      console.log(event.data);
+      var resp = JSON.parse(event.data);
+      if (resp.info === 'userJoined') {
+        document.getElementById('response-div').innerHTML = 
+            'WAITING FOR OTHERS........' + '<br>' + JSON.stringify(resp);
+      } else if (reVote.test(resp.info)) {
+        $("#send").hide();
+        $("#faces").show();
+        document.getElementById('response-div').innerHTML = resp.itemInfo;
+      } else if (reSub.test(resp.info)) {
+        $("#send").show();
+      }
+    };
+  </script>
+
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <form class="form-inline">
+
+          <!-- join -->
+          <div id="join">
+          <label class="sr-only" for="username">Room</label>
+          <input type="text" class="form-control" id="roomid" placeholder="Room code">
+          <label class="sr-only" for="roomid">UserName</label>
+          <input type="text" class="form-control" id="username" placeholder="Username">
+
+          <button type="button" class="btn btn-info"
+              onclick="joinRoom()">Join a room</button>
+          </div> <!-- join -->
+
+          <!-- send -->
+          <div id="send" style="display:none">
+          <label class="sr-only" for="messagebox">Room</label>
+          <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="messagebox">
+          <button type="button" class="btn btn-info"
+              onclick="sendMessage()">Send message</button>
+          </div> <!-- send -->
+        </form>
+
+        <!-- response -->
+        <div id="response-div"></div>
+
+        <div id="faces" style="display:none">
+          <img src="happy.png" onclick="sendVote(1)">
+          <img src="sad.png" onclick="sendVote(0)">
+        </div>
+
+
+      </div>
+    </div> <!-- row -->
+
+  </div> <!-- container -->
+
+</body>
+</html>
+>>>>>>> playerAppEllen
