@@ -42,7 +42,7 @@ var activeRooms = {};
 
 function updateAllPlayers (roomId, updateObject) {
     var updateText = JSON.stringify(updateObject);
-    
+    console.log('sending (players): %s', updateText);
     for (var i = 0; i < activeRooms[roomId].players.length; i++){
         activeRooms[roomId].players[i].socket.send(updateText, function(err){
             if(err){
@@ -54,6 +54,7 @@ function updateAllPlayers (roomId, updateObject) {
 
 function updateMasterClient (roomId, updateObject) {
     var updateText = JSON.stringify(updateObject);
+    console.log('sending (master): %s', updateText);
     activeRooms[roomId].masterSocket.send(updateText, function(err){
         if(err){
             console.error(err);
