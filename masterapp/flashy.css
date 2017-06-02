@@ -85,9 +85,9 @@ input {
 
 div#waiting img {
   position: absolute;
-  top: 20px;
+  bottom: 0px;
   align-self: center;
-  width: 200px;
+  width: 100px;
 }
 
 span.player {
