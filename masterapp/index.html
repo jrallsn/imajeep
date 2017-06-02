@@ -88,6 +88,7 @@
 				case 'REVIEW_ACTION_ITEMS':
 					if(message.whoVoted){
 						document.getElementById('playersubmissionstatus').style.display = "";
+						document.getElementById('players').style.display = "";
 						updatePLayerSubmissionStatus(message.whoVoted);
 					}
 					if (message.info === "startVoting") {
@@ -111,6 +112,7 @@
 				case 'SUBMIT_SADS':
 					if(message.whoSubmitted){
 						document.getElementById('playersubmissionstatus').style.display = "";
+						document.getElementById('players').style.display = "";
 						updatePLayerSubmissionStatus(message.whoSubmitted);
 					}
 					document.getElementById('actionItem').style.display = "none";
@@ -132,6 +134,7 @@
 				case 'VOTE_SADS':
 					if(message.whoVoted){
 						document.getElementById('playersubmissionstatus').style.display = "";
+						document.getElementById('players').style.display = "";
 						updatePLayerSubmissionStatus(message.whoVoted);
 					}
 					if (message.info === "startSadsVoting") {
@@ -162,6 +165,7 @@
 				case 'SUBMIT_HAPPIES':
 					if(message.whoSubmitted){
 						document.getElementById('playersubmissionstatus').style.display = "";
+						document.getElementById('players').style.display = "";
 						updatePLayerSubmissionStatus(message.whoSubmitted);
 					}
 					document.getElementById('submitHappies').style.display = "";
@@ -180,6 +184,7 @@
 				case 'VOTE_HAPPIES':
 					if(message.whoVoted){
 						document.getElementById('playersubmissionstatus').style.display = "";
+						document.getElementById('players').style.display = "";
 						updatePLayerSubmissionStatus(message.whoVoted);
 					}
 					if (message.info === "startHappiesVoting") {
@@ -214,7 +219,7 @@
 
         function newPlayer(player) {
             var str = "";
-            str += "<span class='player'><i class='fa fa-user' aria-hidden='true'></i>" + player + "</span>";
+            str += "<span class='player' id='user-" +player+"'><i class='fa fa-user' aria-hidden='true'></i>" + player + "</span>";
             return str;
         }
 		
@@ -352,12 +357,13 @@
 				if(!playermap.hasOwnProperty(player)){
 					continue;
 				}
-
 				text += player + ': ';
 				if(playermap[player]){
 					text += '!';
+					playerVoted(player, true);
 				} else {
 					text += '???';
+					playerVoted(player, false);
 				}
 				text += '<br>';
 			}
@@ -365,6 +371,14 @@
 			document.getElementById('playersubmissionstatus').innerHTML = text;
 		}
 
+
+		function playerVoted(username, bool) {
+			if (bool) {
+				document.getElementById('user-' + username).classList.add('voted');
+			} else {
+				document.getElementById('user-' + username).classList.remove('voted');
+			}
+		}
 	</script>
 
 	<div id='timer'>
@@ -380,7 +394,6 @@
 	</div>
 	<div id="response-div"></div>
 	
-	<div id='players'></div>	
 	<div id='continue'>
 	<button onclick="everyoneIn()">Everyone's in!</button>
 	</div>
@@ -441,5 +454,6 @@
 	<div id='waiting' style="display:none"><img src="dancing.gif"></div>
 	<div id='countdown' style="display:none"></div>
 	<div id='playersubmissionstatus' style="display:none"></div>
+	<div id='players'></div>
 </body>
 </html>
