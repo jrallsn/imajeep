@@ -109,6 +109,7 @@
 					document.getElementById('actionItem').style.display = "none";
 					document.getElementById('voteResults').style.display = "none";
 					document.getElementById('actionResults').innerHTML = "You completed " + message.actionItemsCompletedNumber + " / " + message.actionItemsTotalNumber + " action items!";
+					hideTimer();
 					break;
 				case 'SUBMIT_SADS':
 					if(message.whoSubmitted){
