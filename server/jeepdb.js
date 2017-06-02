@@ -35,7 +35,7 @@ module.exports = {
 		var teamID;
 		db.get("SELECT teamID FROM teams WHERE name='"+teamName + "'", function(err, row) {
 			teamID = row.teamID;
-			db.run("INSERT OR IGNORE INTO actions (description, teamID, status) VALUES ('" + description + "', " + teamID + ")");
+			db.run("INSERT OR IGNORE INTO actions (description, teamID, status) VALUES ('" + description + "', " + teamID + ", 0)");
 		});
 	}
 };
