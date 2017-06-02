@@ -3,9 +3,9 @@ const WebSocket = require('ws');
 const wss = new WebSocket.Server({ port: 3000 });
 var JeepDbAdapter = require('./jeepdb.js');
 
-const votingTimeLimit = 10000;  // default time limit in ms
+const votingTimeLimit = 20000;  // default time limit in ms
 const submissionTimeLimit = 60000;
-const resultsDisplayTime = 10000; // time to display results in ms
+const resultsDisplayTime = 20000; // time to display results in ms
 const actionItemCompleteProportion = 0.75;
 
 const GameStates = {
@@ -268,7 +268,9 @@ wss.on('connection', function connection(ws) {
 
         updateMasterClient(roomId, masterUpdate);
 
-        setTimeout(startVoting(roomId), resultsDisplayTime);
+        setTimeout(function(){
+            startVoting(roomId);
+        }, resultsDisplayTime);
     }
 
     function recordVote (roomId, userName, vote) {
@@ -328,7 +330,7 @@ wss.on('connection', function connection(ws) {
 
         updateMasterClient(roomId, masterUpdate);
 
-        setTimeout(startSads(roomId), resultsDisplayTime);
+        setTimeout(function(){startSads(roomId);}, resultsDisplayTime);
     }
 
     function startSads(roomId) {
@@ -516,7 +518,7 @@ wss.on('connection', function connection(ws) {
 
         updateMasterClient(roomId, masterUpdate);
 
-        setTimeout(startSadsVoting(roomId), resultsDisplayTime);
+        setTimeout(function(){startSadsVoting(roomId);}, resultsDisplayTime);
     }
 
     function endSadsPhase (roomId) {
@@ -623,7 +625,7 @@ wss.on('connection', function connection(ws) {
 
         updateMasterClient(roomId, masterUpdate);
 
-        setTimeout(startSadsVoting(roomId), resultsDisplayTime);
+        setTimeout(function(){startSadsVoting(roomId);}, resultsDisplayTime);
     }
 
     function endHappiesPhase (roomId) {
