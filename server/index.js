@@ -738,7 +738,7 @@ wss.on('connection', function connection(ws) {
                 startActionItemCreation(data.roomId);
                 break;
             case 'createActionItem':
-                creatActionItem(data.roomId, data.message);
+                createActionItem(data.roomId, data.message);
                 break;
             case 'startSadsVoting':
                 initSadsVoting(data.roomId);
