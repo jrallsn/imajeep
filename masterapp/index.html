@@ -86,6 +86,10 @@
 					});
 					break;
 				case 'REVIEW_ACTION_ITEMS':
+					if(message.whoVoted){
+						document.getElementById('playersubmissionstatus').style.display = "";
+						updatePLayerSubmissionStatus(message.whoVoted);
+					}
 					if (message.info === "startVoting") {
 						document.getElementById('beginVoting').style.display = "";
 						document.getElementById('actionItem').innerHTML += message.itemInfo + "<br>";
@@ -104,6 +108,10 @@
 					document.getElementById('actionResults').innerHTML = "You completed " + message.actionItemsCompletedNumber + " / " + message.actionItemsTotalNumber + " action items!";
 					break;
 				case 'SUBMIT_SADS':
+					if(message.whoSubmitted){
+						document.getElementById('playersubmissionstatus').style.display = "";
+						updatePLayerSubmissionStatus(message.whoSubmitted);
+					}
 					document.getElementById('actionResults').style.display = "none";
 					document.getElementById('voteResults').style.display = "none";
 					document.getElementById('submitSads').style.display = "";
@@ -119,16 +127,20 @@
 					});
 					break;
 				case 'VOTE_SADS':
+					if(message.whoVoted){
+						document.getElementById('playersubmissionstatus').style.display = "";
+						updatePLayerSubmissionStatus(message.whoVoted);
+					}
 					if (message.info === "startSadsVoting") {
-                            document.getElementById('beginVoting').style.display = "";
-                            document.getElementById('actionItem').innerHTML += message.itemInfo + "<br>";
-                            document.getElementById('actionItem').style.display = "";
-                            document.getElementById('voteResults').style.display = "none";
+                        document.getElementById('beginVoting').style.display = "";
+                        document.getElementById('actionItem').innerHTML += message.itemInfo + "<br>";
+                        document.getElementById('actionItem').style.display = "";
+                        document.getElementById('voteResults').style.display = "none";
                     } else { 
-                            document.getElementById('actionItem').style.display = "none";
-                            document.getElementById('beginVoting').style.display = "none";
-                            document.getElementById('voteResults').style.display = "";
-                            document.getElementById('voteResults').innerHTML = message.voteResult + " voted happy for this item <br>";
+                        document.getElementById('actionItem').style.display = "none";
+                        document.getElementById('beginVoting').style.display = "none";
+                        document.getElementById('voteResults').style.display = "";
+                        document.getElementById('voteResults').innerHTML = message.voteResult + " voted happy for this item <br>";
                     }
 					break;
 				case 'VIEW_ALL_SADS':
@@ -136,6 +148,51 @@
 					document.getElementById('sadsResults').style.display = "";
 					message.feedback.forEach(function(feedback) {
 						document.getElementById('sadsResults').innerHTML += feedback.feedbackText + " -- score: " + feedback.score + "<br>";
+					});
+					break;
+				case 'CREATE_ACTION_ITEMS':
+					document.getElementById('sadsResults').style.display = "none";
+					document.getElementById('newActionItemSection').style.display = "";
+					break;
+				case 'SUBMIT_HAPPIES':
+					if(message.whoSubmitted){
+						document.getElementById('playersubmissionstatus').style.display = "";
+						updatePLayerSubmissionStatus(message.whoSubmitted);
+					}
+					document.getElementById('submitHappies').style.display = "";
+					break;
+				case 'DISCUSS_HAPPIES':
+					document.getElementById('submitHappies').style.display = "none";
+					document.getElementById('discussHappies').style.display = "";
+					document.getElementById('happiesList').style.display = "";
+					document.getElementById('happiesVoteButton').style.display = "";
+					hideTimer();
+					message.feedbackItems.forEach(function(feedback) {
+						document.getElementById('happiesList').innerHTML += feedback + "<br>";
+					});
+					break;
+				case 'VOTE_HAPPIES':
+					if(message.whoVoted){
+						document.getElementById('playersubmissionstatus').style.display = "";
+						updatePLayerSubmissionStatus(message.whoVoted);
+					}
+					if (message.info === "startHappiesVoting") {
+                        document.getElementById('beginVoting').style.display = "";
+                        document.getElementById('actionItem').innerHTML += message.itemInfo + "<br>";
+                        document.getElementById('actionItem').style.display = "";
+                        document.getElementById('voteResults').style.display = "none";
+                    } else { 
+                        document.getElementById('actionItem').style.display = "none";
+                        document.getElementById('beginVoting').style.display = "none";
+                        document.getElementById('voteResults').style.display = "";
+                        document.getElementById('voteResults').innerHTML = message.voteResult + " voted happy for this item <br>";
+                    }
+					break;
+				case 'VIEW_ALL_HAPPIES':
+					document.getElementById('voteResults').style.display = "none";
+					document.getElementById('happiesResults').style.display = "";
+					message.feedback.forEach(function(feedback) {
+						document.getElementById('happiesResults').innerHTML += feedback.feedbackText + " -- score: " + feedback.score + "<br>";
 					});
 					break;
 				default:
@@ -175,10 +232,12 @@
 				gameName: 'Feels'
 			}));
 		}
+
 		function newSprint() {
 			document.getElementById('feelsMenu').style.display = "none";
 			document.getElementById('newSprint').style.display = "";
 		}
+
 		function sprintNamed() {
 			document.getElementById('newSprint').style.display = "none";
 			document.getElementById('listActionItems').style.display = "";
@@ -200,9 +259,9 @@
 			document.getElementById('voteButton').style.display = "none";
 			document.getElementById('actionItem').style.display = "";
 			exampleSocket.send(JSON.stringify({
-                                action: 'startActionItems',
-                                roomId: activeRoomId
-                        }));
+                action: 'startActionItems',
+                roomId: activeRoomId
+            }));
 		}
 		
 		function sadsVoting() {
@@ -212,6 +271,35 @@
 			exampleSocket.send(JSON.stringify({
 				action: 'startSadsVoting',
 				roomId: activeRoomId
+			}));
+		}
+
+		function happiesVoting() {
+			document.getElementById('discussHappies').style.display = "none";
+			document.getElementById('happiesList').style.display = "none";
+			document.getElementById('happiesVoteButton').style.display = "none";	
+			exampleSocket.send(JSON.stringify({
+				action: 'startHappiesVoting',
+				roomId: activeRoomId
+			}));
+		}
+
+		function sendNewActionItem() {
+			var actionItemBox = document.getElementById('newactionitembox');
+			var actionItem = actionItemBox.value;
+			actionItemBox.value = "";
+			exampleSocket.send(JSON.stringify({
+				roomId: activeRoomId,
+				action: 'createActionItem',
+				message: actionItem
+			}));
+		}
+
+		function beginHappiesPhase(){
+			document.getElementById('newActionItemSection').style.display = "none";
+			exampleSocket.send(JSON.stringify({
+				roomId: activeRoomId,
+				action: 'startHappiesPhase'
 			}));
 		}
 
@@ -237,6 +325,25 @@
 			var timerDiv = document.getElementById('countdown');
 			clearInterval(timerIntervalId);
 			timerDiv.style.display = "none";
+		}
+
+		function updatePLayerSubmissionStatus(playermap) {
+			var text = '';
+			for(var player in playermap){
+				if(!playermap.hasOwnProperty(player)){
+					continue;
+				}
+
+				text += 'player: ';
+				if(playermap[player]){
+					text += '!';
+				} else {
+					text += '???';
+				}
+				text += '<br>';
+			}
+
+			document.getElementById('playersubmissionstatus').innerHTML = text;
 		}
 
 	</script>
@@ -288,7 +395,24 @@
 	<button onclick="sadsVoting()">Vote</button></div>
 
 	<div id='sadsResults' style="display:none">Results:<br></div>
+
+	<div id='submitHappies' style="display:none">Start submitting happies!</div>
+	
+	<div id='discussHappies' style="display:none">Discuss Sads</div>
+	<div id='happiesList' style="display:none"></div>
+	<div id='happiesVoteButton' style="display:none">
+	<button onclick="happiesVoting()">Vote</button></div>
+
+	<div id='happiesResults' style="display:none">Results:<br></div>
+
+	<div id="newActionItemSection" style="display:none">
+	<input type="text" id="newactionitembox"><br>
+	<button onclick="sendNewActionItem()">Submit action item</button><br>
+	<button onclick="beginHappiesPhase()">Move on to Happies</button>
+	</div>
+
 	<div id='waiting' style="display:none"><img src="dancing.gif"></div>
 	<div id='countdown' style="display:none"></div>
+	<div id='playersubmissionstatus' style="display:none"></div>
 </body>
 </html>
