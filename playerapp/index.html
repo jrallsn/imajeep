@@ -1,24 +1,82 @@
 <html>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-  <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
   <style>
-body {
+  html, body {
     background-color: #45B29D;
-}
-</style>
+    color: white;
+    text-align: center;
+    height:100%; margin:0;padding:0
+  }
+  .status {
+    font-family: sans-serif;
+    font-size: 160%
+  }
+  .input-centered {
+    width: 100%;
+  }
+  .centered {
+    padding-top: 50px;
+    padding-bottom: 30px;
+    align: center;
+  }
+  .col-centered {
+    text-align: center;
+    align: center;
+    display: inline-block;
+    float: none
+  }
+
+  .container-fluid{
+    height:100%;
+    display:table;
+    width: 100%;
+    padding: 0
+  }
+
+  .row-fluid {height: 100%; display:table-cell; vertical-align: middle;}
+
+  .box {
+      display: block;
+      height: auto;
+      padding: 20px;
+       -webkit-transition: all 1000ms linear;
+      -moz-transition: all 1000ms linear;
+      -ms-transition: all 1000ms linear;
+      -o-transition: all 1000ms linear;
+      transition: all 1000ms linear;
+  }
+
+  .box img {
+      display: inline-block;
+      
+  }
+
+  .box.hidden {
+      -moz-opacity: 0;
+      opacity: 0;
+      -moz-transform: scale(0.01);
+      -webkit-transform: scale(0.01);
+      -o-transform: scale(0.01);
+      -ms-transform: scale(0.01);
+      transform: scale(0.01);
+  }
+
+
+  </style>
 
 </head>
 <body>
-  PLAYER APP INDEX
-
   <script type="text/javascript">
     
     var exampleSocket = new WebSocket("wss://api.seawall.horse/");
     var activeRoomId;
     var reVote = /start.*Voting/;
+    var reVoteEnd = /.*Voting.*Ended/;
+    var reDiscuss = /discuss.*/;
     var reSub = /startSubmitting.*/;
 
     exampleSocket.onopen = function(event) {
@@ -56,64 +114,96 @@ body {
         userName: activeUserName,
         vote: vote
       }));
-      $("#faces").hide();
-      document.getElementById('response-div').innerHTML = "";
+
+      if (vote === 1) {
+        $('#sad').addClass('hidden')
+      } else if (vote === 0) {
+        $('#happy').addClass('hidden')
+      }
+      $("#faces").hide(0).delay(500);
     }
 
     exampleSocket.onmessage = function(event){
       console.log(event.data);
-      var resp = JSON.parse(event.data);
-      if (resp.info === 'userJoined') {
-        document.getElementById('response-div').innerHTML = 
-            'WAITING FOR OTHERS........' + '<br>' + JSON.stringify(resp);
-      } else if (reVote.test(resp.info)) {
+      var data = JSON.parse(event.data);
+      var html = '';
+      if (data.info === 'userJoined') {
+        html = '<h1>' + data.roomId + '</h1>' +
+          '<p class="status">Welcome, ' + data.userName + '!</p>';
+        document.getElementById('response-div').innerHTML = html;
+      } else if (reVote.test(data.info)) {
+        // voting starts
+        document.getElementById('response-div').innerHTML = "";
+        document.getElementById('response-div').innerHTML = data.itemInfo;
+        $('#sad').removeClass('hidden')
+        $('#happy').removeClass('hidden')
         $("#send").hide();
         $("#faces").show();
-        document.getElementById('response-div').innerHTML = resp.itemInfo;
-      } else if (reSub.test(resp.info)) {
+      } else if (reVoteEnd.test(data.info)) {
+        document.getElementById('response-div').innerHTML = "Voting has ended."
+        $("#faces").hide();
+      } else if (reDiscuss.test(data.info)) {
+        document.getElementById('response-div').innerHTML = "No more submissions."
+        $("#send").hide();
+      } else if (reSub.test(data.info)) {
+        document.getElementById('response-div').innerHTML = "";
+        // send happies/sads
+        $("#faces").hide();
         $("#send").show();
       }
     };
   </script>
 
-  <div class="container">
-    <div class="row">
-      <div class="col">
+<div class="container-fluid">
+  <div class="row">
+    <div class="col">
+    </div>
+    <div class="col-6">
         <form class="form-inline">
 
           <!-- join -->
-          <div id="join">
+          <div id="join" class="centered">
           <label class="sr-only" for="username">Room</label>
-          <input type="text" class="form-control" id="roomid" placeholder="Room code">
+          <input type="text" class="form-control input-centered" id="roomid" placeholder="Room code" style="text-transform: uppercase">
           <label class="sr-only" for="roomid">UserName</label>
-          <input type="text" class="form-control" id="username" placeholder="Username">
+          <input type="text" class="form-control input-centered" id="username" placeholder="Username">
 
           <button type="button" class="btn btn-info"
-              onclick="joinRoom()">Join a room</button>
+              onclick="joinRoom()">Join</button>
           </div> <!-- join -->
 
           <!-- send -->
-          <div id="send" style="display:none">
+          <div id="send" class="centered" style="display:none">
           <label class="sr-only" for="messagebox">Room</label>
           <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="messagebox">
           <button type="button" class="btn btn-info"
-              onclick="sendMessage()">Send message</button>
+              onclick="sendMessage()">Send</button>
           </div> <!-- send -->
         </form>
 
         <!-- response -->
         <div id="response-div"></div>
+    </div>
+    <div class="col">
+    </div>
 
-        <div id="faces" style="display:none">
-          <img src="happy.png" onclick="sendVote(1)">
-          <img src="sad.png" onclick="sendVote(0)">
-        </div>
-
-
+    <div id="faces" style="display:none">
+    <div class="row">
+      <div class="col">
       </div>
-    </div> <!-- row -->
+      <div class="col-6">
+        <img id="happy" class="centered box" src="happy.png" onclick="sendVote(1)">
+        <img id="sad" class="centered box" src="sad.png" onclick="sendVote(0)">
+      </div>
+      <div class="col">
+      </div>
+    </div><!-- row -->
 
-  </div> <!-- container -->
+    </div> <!-- span -->
+    </div>
+</div>
 
+  <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
 </body>
 </html>
