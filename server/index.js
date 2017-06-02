@@ -194,24 +194,6 @@ wss.on('connection', function connection(ws) {
     }
 
     function startVoting (roomId) {
-        if (activeRooms[roomId].state === GameStates.REVIEW_ACTION_ITEMS) {
-            if (activeRooms[roomId].actionItemsToRate.length === 0) {
-                endActionItemsPhase(roomId);
-                return;
-            }
-        } else if (activeRooms[roomId].state === GameStates.VOTE_SADS) {
-            if (activeRooms[roomId].feedbackItemsToRate.length === 0){
-                endSadsPhase(roomId);
-                return;
-            }
-        } else if (activeRooms[roomId].state === GameStates.VOTE_HAPPIES) {
-            if (activeRooms[roomId].feedbackItemsToRate.length === 0){
-                endHappiesPhase(roomId);
-                return;
-            }
-        }
-
-
         if (activeRooms[roomId].actionItemsToRate.length === 0) {
             endActionItemsPhase(roomId);
             return;
@@ -238,13 +220,7 @@ wss.on('connection', function connection(ws) {
         };
 
         activeRooms[roomId].timer = setTimeout(function(){
-            if (activeRooms[roomId].state === GameStates.REVIEW_ACTION_ITEMS) {
-                endVoting(roomId);
-            } else if (activeRooms[roomId].state === GameStates.VOTE_SADS) {
-                endSadsVoting(roomId);
-            } else if (activeRooms[roomId].state === GameStates.VOTE_HAPPIES) {
-                endHappiesVoting(roomId);
-            }
+            endVoting(roomId);
         }, votingTimeLimit);
 
         updateAllClients(roomId, gameUpdate);
@@ -333,7 +309,13 @@ wss.on('connection', function connection(ws) {
         updateMasterClient(roomId, masterUpdate);
 
         if(allVotesReceived) {
-            endVoting (roomId);
+            if (activeRooms[roomId].state === GameStates.REVIEW_ACTION_ITEMS) {
+                endVoting (roomId);
+            } else if (activeRooms[roomId].state === GameStates.VOTE_SADS) {
+                endSadsVoting(roomId);
+            } else if (activeRooms[roomId].state === GameStates.VOTE_HAPPIES) {
+                endHappiesVoting(roomId);
+            }  
         }
     }
 
