@@ -1,56 +1,75 @@
 <html>
 <head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
 </head>
 <body>
-	PLAYER APP INDEX
+  PLAYER APP INDEX
 
-	<script type="text/javascript">
-		
-		var exampleSocket = new WebSocket("wss://api.seawall.horse/");
-		var activeRoomId;
+  <script type="text/javascript">
+    
+    var exampleSocket = new WebSocket("wss://api.seawall.horse/");
+    var activeRoomId;
+    exampleSocket.onopen = function(event) {
+      console.log('opened socket');
+    };
+    function joinRoom() {
+      var roomIdBox = document.getElementById('roomid');
+      var userNameBox = document.getElementById('username');
+      var roomId = roomIdBox.value;
+      var userName = userNameBox.value;
+      activeRoomId = roomId;
+      exampleSocket.send(JSON.stringify({
+        action: 'join',
+        roomId: roomId,
+        userName: userName
+      }));
+      $("#join").hide("slow");
+      $("#send").show("slow");
+    }
+    function sendMessage() {
+      var messageBox = document.getElementById('messagebox');
+      var textToSend = messageBox.value;
+      exampleSocket.send(JSON.stringify({
+        action: 'testMsg',
+        message: textToSend,
+        roomId: activeRoomId
+      }));
+      $("#messagebox").val("");
+    }
+    exampleSocket.onmessage = function(event){
+      console.log(event.data);
+      document.getElementById('response-div').innerHTML = event.data;
+    };
+  </script>
 
-		exampleSocket.onopen = function(event) {
-			console.log('opened socket');
-		};
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <form class="form-inline">
+          <div id="join">
+          <label class="sr-only" for="username">Room</label>
+          <input type="text" class="form-control" id="roomid" placeholder="Room code">
+          <label class="sr-only" for="roomid">UserName</label>
+          <input type="text" class="form-control" id="username" placeholder="Username">
 
-		function joinRoom() {
-			var roomIdBox = document.getElementById('roomid');
-			var roomId = roomIdBox.value;
-			activeRoomId = roomId;
+          <button type="button" class="btn btn-outline-primary"
+              onclick="joinRoom()">Join a room</button>
+          </div> <!-- join -->
+          <div id="send" style="display:none">
+          <label class="sr-only" for="messagebox">Room</label>
+          <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="messagebox">
+          <button type="button" class="btn btn-outline-success"
+              onclick="sendMessage()">Send message</button>
+          </div> <!-- send -->
+        </form>
+        <div id="response-div"></div>
+      </div>
+    </div> <!-- row -->
 
-			exampleSocket.send(JSON.stringify({
-				action: 'join',
-				roomId: roomId
-			}));
-		}
-
-		function sendMessage() {
-			var messageBox = document.getElementById('messagebox');
-			var textToSend = messageBox.value;
-
-			exampleSocket.send(JSON.stringify({
-				action: 'testMsg',
-				message: textToSend,
-				roomId: activeRoomId
-			}));
-		}
-
-		exampleSocket.onmessage = function(event){
-			console.log(event.data);
-			document.getElementById('response-div').innerHTML = event.data;
-		};
-	</script>
-	<br>
-	<input type="text" id="roomid">
-	<button onclick="joinRoom()">Join a room</button>
-	<br>
-	<input type="text" id="messagebox">
-	<button onclick="sendMessage()">Send message</button>
-	<br> 
-	<div id="response-div"></div>
+  </div> <!-- container -->
 
 </body>
 </html>
-
-
-
