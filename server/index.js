@@ -212,6 +212,7 @@ wss.on('connection', function connection(ws) {
         var gameUpdate = {
             info: 'startVoting',
             roomId: roomId,
+            state: activeRooms[roomId].state,
             itemInfo: activeRooms[roomId].currentActionItem.description,
             timeLimit: votingTimeLimit,
             whoVoted: activeRooms[roomId].voteReceived
