@@ -96,7 +96,7 @@
 						document.getElementById('actionItem').innerHTML = message.itemInfo + "<br>";
 						document.getElementById('actionItem').style.display = "";
 						document.getElementById('voteResults').style.display = "none";
-					} else { 
+					} else if (message.info === "votingEnded") { 
 						document.getElementById('beginVoting').style.display = "none";
 						document.getElementById('voteResults').style.display = "";
 						document.getElementById('voteResults').innerHTML = message.voteResult + " voted happy for this item <br>";
@@ -140,7 +140,7 @@
                         document.getElementById('actionItem').innerHTML = message.itemInfo + "<br>";
                         document.getElementById('actionItem').style.display = "";
                         document.getElementById('voteResults').style.display = "none";
-                    } else { 
+                    } else if (message.info === "sadsVotingEnded") { 
                         document.getElementById('beginVoting').style.display = "none";
                         document.getElementById('voteResults').style.display = "";
                         document.getElementById('voteResults').innerHTML = message.voteResult + " voted happy for this item <br>";
@@ -191,7 +191,7 @@
                         document.getElementById('actionItem').innerHTML = message.itemInfo + "<br>";
                         document.getElementById('actionItem').style.display = "";
                         document.getElementById('voteResults').style.display = "none";
-                    } else { 
+                    } else if (message.info === "happiesVotingEnded") { 
                         document.getElementById('beginVoting').style.display = "none";
                         document.getElementById('voteResults').style.display = "";
                         document.getElementById('voteResults').innerHTML = message.voteResult + " voted happy for this item <br>";
