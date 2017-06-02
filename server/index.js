@@ -4,8 +4,8 @@ const wss = new WebSocket.Server({ port: 3000 });
 var JeepDbAdapter = require('./jeepdb.js');
 
 const votingTimeLimit = 5000;  // default time limit in ms
-const submissionTimeLimit = 60000;
-const resultsDisplayTime = 20000; // time to display results in ms
+const submissionTimeLimit = 20000;
+const resultsDisplayTime = 10000; // time to display results in ms
 const actionItemCompleteProportion = 0.75;
 
 const GameStates = {
