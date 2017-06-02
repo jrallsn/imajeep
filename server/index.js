@@ -194,6 +194,24 @@ wss.on('connection', function connection(ws) {
     }
 
     function startVoting (roomId) {
+        if (activeRooms[roomId].state === GameStates.REVIEW_ACTION_ITEMS) {
+            if (activeRooms[roomId].actionItemsToRate.length === 0) {
+                endActionItemsPhase(roomId);
+                return;
+            }
+        } else if (activeRooms[roomId].state === GameStates.VOTE_SADS) {
+            if (activeRooms[roomId].feedbackItemsToRate.length === 0){
+                endSadsVoting(roomId);
+                return;
+            }
+        } else if (activeRooms[roomId].state === GameStates.VOTE_HAPPIES) {
+            if (activeRooms[roomId].feedbackItemsToRate.length === 0){
+                endHappiesVoting(roomId);
+                return;
+            }
+        }
+
+
         if (activeRooms[roomId].actionItemsToRate.length === 0) {
             endActionItemsPhase(roomId);
             return;
