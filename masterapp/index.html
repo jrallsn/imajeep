@@ -11,6 +11,7 @@
 		
 		var exampleSocket = new WebSocket("wss://api.seawall.horse/");
 		var activeRoomId;
+		var timerIntervalId;
 
 		exampleSocket.onopen = function(event) {
 			console.log('opened socket');
@@ -56,6 +57,15 @@
 			//document.getElementById('response-div').innerHTML = event.data;
 
 			var message = JSON.parse(event.data);
+			var timeSeconds;
+
+			if(message.displayTime) {
+				timeSeconds = Number(message.displayTime) / 1000;
+				startTimer(timeSeconds);
+			} else if(message.timeLimit) {
+				timeSeconds = Number(message.timeLimit) / 1000;
+				startTimer(timeSeconds);
+			}
 
 			switch (message.state) {
 				case 'WAITING_FOR_PLAYERS':
@@ -102,6 +112,7 @@
 					document.getElementById('discussSads').style.display = "";
 					document.getElementById('sadsList').style.display = "";
 					document.getElementById('sadsVoteButton').style.display = "";
+					hideTimer();
 					message.feedbackItems.forEach(function(feedback) {
 						document.getElementById('sadsList').innerHTML += feedback + "<br>";
 					});
@@ -124,6 +135,7 @@
 					message.feedback.forEach(function(feedback) {
 						document.getElementById('sadsResults').innerHTML += feedback.feedbackText + " -- score: " + feedback.score + "<br>";
 					});
+					break;
 				default:
 					break;
 			}
@@ -205,6 +217,30 @@
 			}));
 		}
 
+		function startTimer(numSeconds) {
+			if(timerIntervalId){
+				clearInterval(timerIntervalId);
+			}
+			var timerDiv = document.getElementById('countdown');
+			var seconds = Number(numSeconds);
+			timerDiv.innerHTML = seconds;
+			timerDiv.style.display = "";
+
+			timerIntervalId = setInterval(function(){
+				seconds--;
+				timerDiv.innerHTML = seconds;
+				if(seconds === 0){
+					clearInterval(timerIntervalId);
+				}
+			}, 1000);
+		}
+
+		function hideTimer() {
+			var timerDiv = document.getElementById('countdown');
+			clearInterval(timerIntervalId);
+			timerDiv.style.display = "none";
+		}
+
 	</script>
 	<div id="createroom">
 	<input type="text" id="messagebox" placeholder="Your team name"><br>
@@ -255,5 +291,6 @@
 
 	<div id='sadsResults' style="display:none">Results:<br></div>
 	<div id='waiting' style="display:none"><img src="dancing.gif"></div>
+	<div id='countdown' style="display:none"></div>
 </body>
 </html>
