@@ -20,11 +20,15 @@ div {
   align: 'center';
 }
 
-div#actionItem {
+div#section-main {
   font-family: 'Ubuntu', sans-serif;
   font-size: 100px;
   font-weight: bold;
-  font-color: #ffffff;
+}
+
+div#section-secondary {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 60px;
 }
 
 div#roomiddiv {
