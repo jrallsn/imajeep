@@ -32,7 +32,10 @@
 			}));
 		}
 
-		exampleSocket.onmessage = function(event){
+		var currentState = '';
+		var players = [];
+
+		exampleSocket.onmessage = function(event) {
 			console.log(event.data);
 			try {
 				var data = JSON.parse(event.data);
@@ -44,7 +47,28 @@
 
 			}
 			document.getElementById('response-div').innerHTML = event.data;
+
+			var message = JSON.parse(event.data);
+
+			switch (message.state) {
+				case 'WAITING_FOR_PLAYERS':
+					activeRoomId = message.roomId;
+
+					if (message.info === 'playerJoined') {
+						players.push({
+							userName: message.info.userName
+						});
+					}
+					
+					document.getElementById('players').innerHTML = players.toString();
+
+					break;
+				default:
+					break;
+			}
 		};
+
+
 	</script>
 	<br>
 	<button onclick="createRoom()">Create a room</button>
@@ -54,6 +78,13 @@
 	<button onclick="sendMessage()">Send message</button>
 	<br> 
 	<div id="response-div"></div>
+
+	<div id='players'>
+
+	</div>
+
+
+
 
 </body>
 </html>
