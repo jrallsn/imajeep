@@ -21,13 +21,14 @@
       var roomId = roomIdBox.value;
       var userName = userNameBox.value;
       activeRoomId = roomId;
+      activeUserName = userName;
       exampleSocket.send(JSON.stringify({
         action: 'join',
         roomId: roomId,
         userName: userName
       }));
-      $("#join").hide("slow");
-      $("#send").show("slow");
+      $("#join").hide();
+      $("#faces").show();
     }
     function sendMessage() {
       var messageBox = document.getElementById('messagebox');
@@ -35,13 +36,24 @@
       exampleSocket.send(JSON.stringify({
         action: 'testMsg',
         message: textToSend,
-        roomId: activeRoomId
+        roomId: activeRoomId,
+        userName: activeUserName
       }));
       $("#messagebox").val("");
     }
+    function sendVote(vote) {
+      exampleSocket.send(JSON.stringify({
+        action: 'submitVote',
+        roomId: activeRoomId,
+        userName: activeUserName,
+        vote: vote
+      }));
+    }
     exampleSocket.onmessage = function(event){
       console.log(event.data);
-      document.getElementById('response-div').innerHTML = event.data;
+      var resp = JSON.parse(event.data);
+      var output = resp.state + '<br>' + event.data;
+      document.getElementById('response-div').innerHTML = output;
     };
   </script>
 
@@ -49,6 +61,8 @@
     <div class="row">
       <div class="col">
         <form class="form-inline">
+
+          <!-- join -->
           <div id="join">
           <label class="sr-only" for="username">Room</label>
           <input type="text" class="form-control" id="roomid" placeholder="Room code">
@@ -58,6 +72,8 @@
           <button type="button" class="btn btn-outline-primary"
               onclick="joinRoom()">Join a room</button>
           </div> <!-- join -->
+
+          <!-- send -->
           <div id="send" style="display:none">
           <label class="sr-only" for="messagebox">Room</label>
           <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="messagebox">
@@ -65,6 +81,13 @@
               onclick="sendMessage()">Send message</button>
           </div> <!-- send -->
         </form>
+
+        <div id="faces" style="display:none">
+          <img src="happy.jpg" onclick="sendVote(1)">
+          <img src="angry.jpg" onclick="sendVote(0)">
+        </div>
+
+        <!-- response -->
         <div id="response-div"></div>
       </div>
     </div> <!-- row -->
