@@ -424,6 +424,7 @@ wss.on('connection', function connection(ws) {
         activeRooms[roomId].feedbackItemsToRate = feedbackItems;
         activeRooms[roomId].voteReceived = {};
         activeRooms[roomId].feedbackItemsCount = feedbackItems.length;
+        activerooms[roomId].feedbackItemsWithScores = [];
 
         for(var i = 0; i < activeRooms[roomId].players.length; i++){
             activeRooms[roomId].voteReceived[activeRooms[roomId].players[i].playerName] = false;
@@ -484,6 +485,11 @@ wss.on('connection', function connection(ws) {
             totalVote += activeRooms[roomId].votes[uname];
         }
 
+        activerooms[roomId].feedbackItemsWithScores.push({
+            feedbackText: activeRooms[roomId].currentFeedbackItem,
+            score: (totalVote / activeRooms[roomId].players.length)
+        });
+
         var votingResultText = totalVote + ' / ' + activeRooms[roomId].players.length;
 
         var masterUpdate = {
@@ -491,14 +497,14 @@ wss.on('connection', function connection(ws) {
             roomId: roomId,
             state: activeRooms[roomId].state,
             whoVoted: activeRooms[roomId].voteReceived,
-            itemInfo: actionItem.text,
+            itemInfo: activeRooms[roomId].currentFeedbackItem,
             voteResult: votingResultText,
             displayTime: resultsDisplayTime
         };
 
         updateMasterClient(roomId, masterUpdate);
 
-        setTimeout(startVoting(roomId), resultsDisplayTime);
+        setTimeout(startSadsVoting(roomId), resultsDisplayTime);
     }
 
     function endSadsPhase (roomId) {
@@ -511,8 +517,6 @@ wss.on('connection', function connection(ws) {
             info: 'sadsResults',
             roomId: roomId,
             state: activeRooms[roomId].state,
-            actionItemsCompletedNumber: activeRooms[roomId].actionItemsCompleted,
-            actionItemsTotalNumber: activeRooms[roomId].actionItemsCount,
             displayTime: resultsDisplayTime
         };
 
@@ -520,8 +524,6 @@ wss.on('connection', function connection(ws) {
         delete activeRooms[roomId].actionItemsCount;
 
         updateMasterClient(roomId, masterUpdate);
-
-        setTimeout(startSads(roomId), resultsDisplayTime);
     }
 
   	function testMsg(roomId, content){
@@ -538,7 +540,9 @@ wss.on('connection', function connection(ws) {
             return;
         }
     	var action = data.action;
-        if(data.roomId && !activeRooms[data.roomId]){
+
+        data.roomId = data.roomId || '';
+        if(action !== 'init' && !activeRooms[data.roomId]){
             console.error('Attempted action ' + data.action + ' but Room ID ' + data.roomId + ' not initialized');
             return;
         }
