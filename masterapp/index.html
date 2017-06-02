@@ -155,6 +155,7 @@
 					message.feedback.forEach(function(feedback) {
 						document.getElementById('sadsResults').innerHTML += feedback.feedbackText + " -- score: " + feedback.score + "<br>";
 					});
+					hideTimer();
 					break;
 				case 'CREATE_ACTION_ITEMS':
 					document.getElementById('players').style.display = "none";
@@ -203,6 +204,7 @@
 					message.feedback.forEach(function(feedback) {
 						document.getElementById('happiesResults').innerHTML += feedback.feedbackText + " -- score: " + feedback.score + "<br>";
 					});
+					hideTimer();
 					break;
 				default:
 					break;
