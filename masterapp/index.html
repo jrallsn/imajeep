@@ -2,7 +2,7 @@
 <head>
   <script src="https://use.fontawesome.com/16b88d82ba.js"></script>
   <link rel="stylesheet" href="flashy.css" TYPE="text/css"/>
-  <link href="https://fonts.googleapis.com/css?family=Pacifico|Ubuntu" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Pacifico" rel="stylesheet">
 </head>
 <body>
 	<div id="title">BEEP BEEP IM A JEEP</div>
@@ -145,18 +145,14 @@
 
 		
 		function displayPlayers() {
-			var allNames = "";
-			players.forEach(function (p) {
-				allNames += p.userName + " ";
-			});
 			document.getElementById('players').innerHTML += newPlayer(players.pop().userName);
 		}
 
-                function newPlayer(player) {
-                        var str = "";
-                        str += "<i class='fa fa-user' aria-hidden='true'></i>" + player + "<br>";
-                        return str;
-                }
+        function newPlayer(player) {
+            var str = "";
+            str += "<span class='player'><i class='fa fa-user' aria-hidden='true'></i>" + player + "</span>";
+            return str;
+        }
 		
 		function everyoneIn() {
 			document.getElementById('createroom').style.display = "none";
@@ -260,13 +256,13 @@
 	<div id='feels' style="display:none">Select your Game!
 	<button onclick="loadFeels()">#Feels</button></div>
 
-	<div id='feelsMenu' style="display:none">Let's talk about our feelings.
-	<button onclick="gameRules()">Game Rules</button>
-	<button onclick="prevSprint()">Previous Sprints</button>
+	<div id='feelsMenu' style="display:none">Let's talk about our feelings.<br>
+	<button onclick="gameRules()">Game Rules</button><br>
+	<button onclick="prevSprint()">Previous Sprints</button><br>
 	<button onclick="newSprint()">New Sprint</button></div>
 	
-	<div id='newSprint' style="display:none">Give the new Sprint a name.
-	<input type="text" id="sprintbox">
+	<div id='newSprint' style="display:none">
+	<input type="text" id="sprintbox" placeholder="Name your sprint">
 	<button onclick="sprintNamed()">Enter</button></div>
 	
 	<div id='listActionItems' style="display:none">Here are the incomplete action items</div>

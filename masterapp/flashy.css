@@ -38,6 +38,7 @@ button {
   padding: 15px;
   font-size: 30px;
   margin: 10px;
+  font-family: 'Josefin Sans', sans-serif;
 }
 
 button:hover {
@@ -51,6 +52,8 @@ i.fa {
 
 i.fa-user {
   color: #45B29D;
+  margin-left: 0px;
+  margin-right: 5px;
 }
 
 i.fa-check-circle {
@@ -84,4 +87,20 @@ div#waiting img {
   top: 20px;
   align-self: center;
   width: 200px;
+}
+
+span.player {
+  border: none;
+  margin: 5px;
+  background-color: #ffffff;
+  padding: 5px;
+  display: inline-block;
+  text-align: bottom;
+  font-size: 20px;
+  font-weight: bold;
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+div#feelsMenu {
+  text-align: center;
 }
