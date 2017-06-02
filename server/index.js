@@ -35,7 +35,7 @@ function generateId() {
         uid += charSet.charAt(Math.floor(Math.random() * charSet.length));
     }
 
-    return uid;
+    return 'JEEP';//uid;
 }
 
 var activeRooms = {};
@@ -124,7 +124,7 @@ wss.on('connection', function connection(ws) {
             state: activeRooms[roomId].state
         };
 
-        updateAllClients(gameUpdate);
+        updateAllClients(roomId, gameUpdate);
     }
 
     function selectGame(roomId, gameName) {
