@@ -7,6 +7,12 @@ body {
   text-align: center;
 }
 
+div#countdown {
+  font-family: 'Pacifico', cursive;
+  color: #EFC94C;
+  font-size: 100px;
+}
+
 div#title {
   font-family: 'Pacifico', cursive;
   font-color: #ffffff;
@@ -27,6 +33,11 @@ div#section-main {
 }
 
 div#section-secondary {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 60px;
+}
+
+div#section-under {
   font-family: 'Ubuntu', sans-serif;
   font-size: 60px;
 }
@@ -127,4 +138,9 @@ span#remainingTime {
   width: 0;
 }
 
-
+li { 
+  list-style-position: inside;
+}
+ul {
+  padding: 30px;
+}
