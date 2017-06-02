@@ -89,6 +89,7 @@
 					if (message.info === "startVoting") {
 						document.getElementById('beginVoting').style.display = "";
 						document.getElementById('actionItem').innerHTML += message.itemInfo + "<br>";
+						document.getElementById('actionItem').style.display = "";
 						document.getElementById('voteResults').style.display = "none";
 					} else { 
 						document.getElementById('actionItem').style.display = "none";
@@ -119,15 +120,16 @@
 					break;
 				case 'VOTE_SADS':
 					if (message.info === "startSadsVoting") {
-                                                document.getElementById('beginVoting').style.display = "";
-                                                document.getElementById('actionItem').innerHTML += message.itemInfo + "<br>";
-                                                document.getElementById('voteResults').style.display = "none";
-                                        } else { 
-                                                document.getElementById('actionItem').style.display = "none";
-                                                document.getElementById('beginVoting').style.display = "none";
-                                                document.getElementById('voteResults').style.display = "";
-                                                document.getElementById('voteResults').innerHTML = message.voteResult + " voted happy for this item <br>";
-                                        }
+                            document.getElementById('beginVoting').style.display = "";
+                            document.getElementById('actionItem').innerHTML += message.itemInfo + "<br>";
+                            document.getElementById('actionItem').style.display = "";
+                            document.getElementById('voteResults').style.display = "none";
+                    } else { 
+                            document.getElementById('actionItem').style.display = "none";
+                            document.getElementById('beginVoting').style.display = "none";
+                            document.getElementById('voteResults').style.display = "";
+                            document.getElementById('voteResults').innerHTML = message.voteResult + " voted happy for this item <br>";
+                    }
 					break;
 				case 'VIEW_ALL_SADS':
 					document.getElementById('voteResults').style.display = "none";
