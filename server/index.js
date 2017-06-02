@@ -44,16 +44,20 @@ function updateAllPlayers (roomId, updateObject) {
     var updateText = JSON.stringify(updateObject);
     
     for (var i = 0; i < activeRooms[roomId].players.length; i++){
-        activeRooms[roomId].players[i].socket.send(updateText, function(error){
-            console.error(error);
+        activeRooms[roomId].players[i].socket.send(updateText, function(err){
+            if(err){
+                console.error(err);
+            }
         });
     }
 }
 
 function updateMasterClient (roomId, updateObject) {
     var updateText = JSON.stringify(updateObject);
-    activeRooms[roomId].masterSocket.send(updateText, function(errror){
-        console.error(error);
+    activeRooms[roomId].masterSocket.send(updateText, function(err){
+        if(err){
+            console.error(err);
+        }
     });
 }
 
