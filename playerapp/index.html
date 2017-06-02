@@ -1,65 +1,3 @@
-<<<<<<< HEAD
-<html>
-<head>
-</head>
-<body>
-	PLAYER APP INDEX
-
-	<script type="text/javascript">
-		
-		var exampleSocket = new WebSocket("wss://api.seawall.horse/");
-		var activeRoomId;
-
-		exampleSocket.onopen = function(event) {
-			console.log('opened socket');
-		};
-
-		function joinRoom() {
-			var roomIdBox = document.getElementById('roomid');
-			var roomId = roomIdBox.value;
-			var userNameBox = document.getElementById('playername');
-			var userName = userNameBox.value;
-			activeRoomId = roomId;
-
-			exampleSocket.send(JSON.stringify({
-				action: 'join',
-				userName: userName,
-				roomId: roomId
-			}));
-		}
-
-		function sendMessage() {
-			var messageBox = document.getElementById('messagebox');
-			var textToSend = messageBox.value;
-
-			exampleSocket.send(JSON.stringify({
-				action: 'testMsg',
-				message: textToSend,
-				roomId: activeRoomId
-			}));
-		}
-
-		exampleSocket.onmessage = function(event){
-			console.log(event.data);
-			document.getElementById('response-div').innerHTML = event.data;
-		};
-	</script>
-	<br>
-	Player Name: <input type="text" id="playername">
-	Room ID: <input type="text" id="roomid">
-	<button onclick="joinRoom()">Join a room</button>
-	<br>
-	<input type="text" id="messagebox">
-	<button onclick="sendMessage()">Send message</button>
-	<br> 
-	<div id="response-div"></div>
-
-</body>
-</html>
-
-
-
-=======
 <html>
 <head>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
@@ -179,4 +117,3 @@ body {
 
 </body>
 </html>
->>>>>>> playerAppEllen
