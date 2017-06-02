@@ -250,6 +250,7 @@
 		}
 
 		function newSprint() {
+			document.getElementById('oldSprints').style.display = "none";
 			document.getElementById('feelsMenu').style.display = "none";
 			document.getElementById('newSprint').style.display = "";
 		}
@@ -387,6 +388,10 @@
 				document.getElementById('user-' + username).classList.remove('voted');
 			}
 		}
+
+		function prevSprint(){
+			document.getElementById('oldSprints').style.display = "";
+		}
 	</script>
 
 	<div id='timer' style="display: none;">
@@ -455,6 +460,8 @@
 		<div id='happiesList' style="display:none"></div>
 
 		<div id='happiesResults' style="display:none">Results:<br></div>
+
+		<div id='oldSprints' style="display:none"><img src="/graph-1.png"></div>
 	</div>
 
 	<!-- PLAYER LIST -->
