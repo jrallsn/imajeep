@@ -542,7 +542,6 @@ wss.on('connection', function connection(ws) {
             info: 'sadsResults',
             roomId: roomId,
             state: activeRooms[roomId].state,
-            displayTime: resultsDisplayTime,
             feedback: activeRooms[roomId].feedbackItemsWithScores
         };
 
@@ -651,7 +650,6 @@ wss.on('connection', function connection(ws) {
             info: 'happiesResults',
             roomId: roomId,
             state: activeRooms[roomId].state,
-            displayTime: resultsDisplayTime,
             feedback: activeRooms[roomId].feedbackItemsWithScores
         };
 
@@ -683,8 +681,6 @@ wss.on('connection', function connection(ws) {
 
         updateAllClients(roomId, gameUpdate);
     }
-
-
 
   	function testMsg(roomId, content){
         updateAllClients(roomId, {message: content});
