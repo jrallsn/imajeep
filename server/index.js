@@ -409,7 +409,7 @@ wss.on('connection', function connection(ws) {
         var gameUpdate = {
             info: 'discussSads',
             roomId: roomId,
-            state: activerooms[roomId].state,
+            state: activeRooms[roomId].state,
             whoSubmitted: activeRooms[roomId].feedbackReceived,
             feedbackItems: activeRooms[roomId].feedbackItems
         };
@@ -424,7 +424,7 @@ wss.on('connection', function connection(ws) {
         var gameUpdate = {
             info: 'discussHappies',
             roomId: roomId,
-            state: activerooms[roomId].state,
+            state: activeRooms[roomId].state,
             whoSubmitted: activeRooms[roomId].feedbackReceived,
             feedbackItems: activeRooms[roomId].feedbackItems
         };
@@ -439,7 +439,7 @@ wss.on('connection', function connection(ws) {
         activeRooms[roomId].feedbackItemsToRate = feedbackItems;
         activeRooms[roomId].voteReceived = {};
         activeRooms[roomId].feedbackItemsCount = feedbackItems.length;
-        activerooms[roomId].feedbackItemsWithScores = [];
+        activeRooms[roomId].feedbackItemsWithScores = [];
 
         for(var i = 0; i < activeRooms[roomId].players.length; i++){
             activeRooms[roomId].voteReceived[activeRooms[roomId].players[i].playerName] = false;
@@ -500,7 +500,7 @@ wss.on('connection', function connection(ws) {
             totalVote += activeRooms[roomId].votes[uname];
         }
 
-        activerooms[roomId].feedbackItemsWithScores.push({
+        activeRooms[roomId].feedbackItemsWithScores.push({
             feedbackText: activeRooms[roomId].currentFeedbackItem,
             score: (totalVote / activeRooms[roomId].players.length)
         });
@@ -533,7 +533,7 @@ wss.on('connection', function connection(ws) {
             roomId: roomId,
             state: activeRooms[roomId].state,
             displayTime: resultsDisplayTime,
-            feedback: activerooms[roomId].feedbackItemsWithScores
+            feedback: activeRooms[roomId].feedbackItemsWithScores
         };
 
         updateMasterClient(roomId, masterUpdate);
@@ -546,7 +546,7 @@ wss.on('connection', function connection(ws) {
         activeRooms[roomId].feedbackItemsToRate = feedbackItems;
         activeRooms[roomId].voteReceived = {};
         activeRooms[roomId].feedbackItemsCount = feedbackItems.length;
-        activerooms[roomId].feedbackItemsWithScores = [];
+        activeRooms[roomId].feedbackItemsWithScores = [];
 
         for(var i = 0; i < activeRooms[roomId].players.length; i++){
             activeRooms[roomId].voteReceived[activeRooms[roomId].players[i].playerName] = false;
@@ -607,7 +607,7 @@ wss.on('connection', function connection(ws) {
             totalVote += activeRooms[roomId].votes[uname];
         }
 
-        activerooms[roomId].feedbackItemsWithScores.push({
+        activeRooms[roomId].feedbackItemsWithScores.push({
             feedbackText: activeRooms[roomId].currentFeedbackItem,
             score: (totalVote / activeRooms[roomId].players.length)
         });
@@ -640,7 +640,7 @@ wss.on('connection', function connection(ws) {
             roomId: roomId,
             state: activeRooms[roomId].state,
             displayTime: resultsDisplayTime,
-            feedback: activerooms[roomId].feedbackItemsWithScores
+            feedback: activeRooms[roomId].feedbackItemsWithScores
         };
 
         updateMasterClient(roomId, masterUpdate);
