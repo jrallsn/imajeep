@@ -31,7 +31,11 @@ module.exports = {
 	actionItemComplete: function(actionID) {
 		db.run("UPDATE actions SET status=1 WHERE actionID=" + actionID);
 	},
-	addActionItem: function(description, teamID) {
-		db.run("INSERT INTO actions (description, teamID, status) VALUES ('" + description + "', " + teamID + ")");
+	addActionItem: function(description, teamName) {
+		var teamID;
+		db.get("SELECT teamID FROM teams WHERE name='"+teamName + "'", function(err, row) {
+			teamID = row.teamID;
+			db.run("INSERT OR IGNORE INTO actions (description, teamID, status) VALUES ('" + description + "', " + teamID + ")");
+		});
 	}
 };
