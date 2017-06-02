@@ -83,7 +83,7 @@
 					break;
 				case 'SHOW_OLD_ACTION_ITEMS_LIST':
 					message.message.forEach(function(action) {
-						document.getElementById('actionList').innerHTML += action.description + "<br>";
+						document.querySelector('#actionList ul').innerHTML += "<li>" + action.description + "</li>";
 					});
 					break;
 				case 'REVIEW_ACTION_ITEMS':
@@ -151,15 +151,13 @@
 					document.getElementById('voteResults').style.display = "none";
 					document.getElementById('actionItem').style.display = "none";
 					document.getElementById('sadsResults').style.display = "";
-					hideTimer();
 					message.feedback.forEach(function(feedback) {
 						document.getElementById('sadsResults').innerHTML += feedback.feedbackText + " -- score: " + feedback.score + "<br>";
 					});
 					break;
 				case 'CREATE_ACTION_ITEMS':
-					//document.getElementById('sadsResults').style.display = "none";
-					hideTimer();
 					document.getElementById('players').style.display = "none";
+					document.getElementById('sadsResults').style.display = "none";
 					document.getElementById('newActionItemSection').style.display = "";
 					break;
 				case 'SUBMIT_HAPPIES':
@@ -200,7 +198,6 @@
 					document.getElementById('actionItem').style.display = "none";
 					document.getElementById('voteResults').style.display = "none";
 					document.getElementById('happiesResults').style.display = "";
-					hideTimer();
 					message.feedback.forEach(function(feedback) {
 						document.getElementById('happiesResults').innerHTML += feedback.feedbackText + " -- score: " + feedback.score + "<br>";
 					});
@@ -400,7 +397,8 @@
 	<div id='section-main'>
 		<div id="createroom">
 			<input type="text" id="messagebox" placeholder="Your team name"><br>
-			<button onclick="createRoom()">Create a room</button><br>
+			<button onclick="createRoom()">Create a room</button>
+			<br>
 			<div id="roomiddiv"></div>
 		</div>
 		<div id='actionItem' style='display:none'></div>
@@ -442,8 +440,8 @@
 	<div id='section-secondary'>
 		<div id='beginVoting' style="display:none">Vote on your phones now!</div>
 
-		<div id='listActionItems' style="display:none">Here are the incomplete action items</div>
-		<div id='actionList' style="display:none"></div>
+		<div id='listActionItems' style="display:none">Here are the incomplete action items<br></div>
+		<div id='actionList' style="display:none"><ul></ul></div>
 		<div id='sadsResults' style="display:none">Results:<br>
 			<button onclick="startNewActionItemsPhase()">Done</button>
 		</div>
