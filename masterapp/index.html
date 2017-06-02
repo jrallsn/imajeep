@@ -151,6 +151,7 @@
 					document.getElementById('voteResults').style.display = "none";
 					document.getElementById('actionItem').style.display = "none";
 					document.getElementById('sadsResults').style.display = "";
+					document.getElementById('sadsresultsbutton').style.display = "";
 					message.feedback.forEach(function(feedback) {
 						document.getElementById('sadsResults').innerHTML += feedback.feedbackText + " -- score: " + feedback.score + "<br>";
 					});
@@ -158,6 +159,7 @@
 				case 'CREATE_ACTION_ITEMS':
 					document.getElementById('players').style.display = "none";
 					document.getElementById('sadsResults').style.display = "none";
+					document.getElementById('sadsresultsbutton').style.display = "none";
 					document.getElementById('newActionItemSection').style.display = "";
 					break;
 				case 'SUBMIT_HAPPIES':
@@ -442,8 +444,7 @@
 
 		<div id='listActionItems' style="display:none">Here are the incomplete action items<br></div>
 		<div id='actionList' style="display:none"><ul></ul></div>
-		<div id='sadsResults' style="display:none">Results:<br>
-			<button onclick="startNewActionItemsPhase()">Done</button>
+		<div id='sadsResults' style="display:none">Results:<br>	
 		</div>
 		<div id='voteResults' style="display:none"></div>
 		<div id='actionResults' style="display:none"></div>	
@@ -480,6 +481,10 @@
 
 		<div id='happiesVoteButton' style="display:none">
 			<button onclick="happiesVoting()">Vote</button>
+		</div>
+
+		<div id='sadsresultsbutton'>
+			<button onclick="startNewActionItemsPhase()">Done</button>
 		</div>
 	</div>
 
