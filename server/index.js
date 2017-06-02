@@ -512,7 +512,7 @@ wss.on('connection', function connection(ws) {
 
         activeRooms[roomId].feedbackItemsWithScores.push({
             feedbackText: activeRooms[roomId].currentFeedbackItem,
-            score: (totalVote / activeRooms[roomId].players.length)
+            score: ((totalVote / activeRooms[roomId].players.length) * 100).toFixed(0)
         });
 
         var votingResultText = totalVote + ' / ' + activeRooms[roomId].players.length;
@@ -620,7 +620,7 @@ wss.on('connection', function connection(ws) {
 
         activeRooms[roomId].feedbackItemsWithScores.push({
             feedbackText: activeRooms[roomId].currentFeedbackItem,
-            score: (totalVote / activeRooms[roomId].players.length)
+            score: ((totalVote / activeRooms[roomId].players.length) * 100).toFixed(0)
         });
 
         var votingResultText = totalVote + ' / ' + activeRooms[roomId].players.length;
