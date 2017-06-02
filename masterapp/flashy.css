@@ -104,3 +104,13 @@ span.player {
 div#feelsMenu {
   text-align: center;
 }
+
+span#remainingTime {
+  border: 1px black solid;
+  display: inline-block;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  height: 50px;
+  width: 100%;
+}

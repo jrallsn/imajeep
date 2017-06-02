@@ -302,8 +302,11 @@
 				action: 'startHappiesPhase'
 			}));
 		}
+		var totalTime = 0,
+			remainingTime = 0;
 
 		function startTimer(numSeconds) {
+			totalTime = numSeconds;
 			if(timerIntervalId){
 				clearInterval(timerIntervalId);
 			}
@@ -314,6 +317,8 @@
 
 			timerIntervalId = setInterval(function(){
 				seconds--;
+				remainingTime = seconds;
+				document.getElementById('remainingTime').style.width = remainingTime / totalTime * 100 + "%";
 				timerDiv.innerHTML = seconds;
 				if(seconds === 0){
 					clearInterval(timerIntervalId);
@@ -347,6 +352,12 @@
 		}
 
 	</script>
+
+	<div id='timer'>
+		<span id='remainingTime'>
+		</span>
+	</div>
+
 	<div id="createroom">
 	<input type="text" id="messagebox" placeholder="Your team name"><br>
 	<button onclick="createRoom()">Create a room</button>
