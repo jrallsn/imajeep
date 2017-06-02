@@ -85,7 +85,8 @@ wss.on('connection', function connection(ws) {
 
   		ws.send(JSON.stringify({
   			info: 'roomCreated',
-  			roomId: roomId
+  			roomId: roomId,
+            state: activeRooms[roomId].state
   		}));
   	}
 
@@ -230,7 +231,8 @@ wss.on('connection', function connection(ws) {
 
         var playerUpdate = {
             info: 'votingEnded',
-            roomId: roomId
+            roomId: roomId,
+            state: activeRooms[roomId].state
         };
 
         updateAllPlayers(roomId, playerUpdate);
@@ -468,6 +470,7 @@ wss.on('connection', function connection(ws) {
         var gameUpdate = {
             info: 'startSadsVoting',
             roomId: roomId,
+            state: activeRooms[roomId].state,
             itemInfo: activeRooms[roomId].currentFeedbackItem,
             timeLimit: votingTimeLimit,
             whoVoted: activeRooms[roomId].voteReceived
@@ -485,6 +488,7 @@ wss.on('connection', function connection(ws) {
 
         var playerUpdate = {
             info: 'sadsVotingEnded',
+            state: activeRooms[roomId].state,
             roomId: roomId
         };
 
@@ -575,6 +579,7 @@ wss.on('connection', function connection(ws) {
         var gameUpdate = {
             info: 'startHappiesVoting',
             roomId: roomId,
+            state: activeRooms[roomId].state,
             itemInfo: activeRooms[roomId].currentFeedbackItem,
             timeLimit: votingTimeLimit,
             whoVoted: activeRooms[roomId].voteReceived
@@ -592,6 +597,7 @@ wss.on('connection', function connection(ws) {
 
         var playerUpdate = {
             info: 'happiesVotingEnded',
+            state: activeRooms[roomId].state,
             roomId: roomId
         };
 
