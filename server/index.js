@@ -3,7 +3,7 @@ const WebSocket = require('ws');
 const wss = new WebSocket.Server({ port: 3000 });
 var JeepDbAdapter = require('./jeepdb.js');
 
-const votingTimeLimit = 20000;  // default time limit in ms
+const votingTimeLimit = 5000;  // default time limit in ms
 const submissionTimeLimit = 60000;
 const resultsDisplayTime = 20000; // time to display results in ms
 const actionItemCompleteProportion = 0.75;
@@ -253,7 +253,7 @@ wss.on('connection', function connection(ws) {
         }
 
         if(actionItemComplete){
-            JeepDbAdapter.setActionItemComplete(activeRooms[roomId].currentActionItem.actionID);
+            JeepDbAdapter.actionItemComplete(activeRooms[roomId].currentActionItem.actionID);
         }
 
         var masterUpdate = {
