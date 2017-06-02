@@ -260,7 +260,7 @@ wss.on('connection', function connection(ws) {
             roomId: roomId,
             state: activeRooms[roomId].state,
             whoVoted: activeRooms[roomId].voteReceived,
-            itemInfo: actionItem.text,
+            itemInfo: activeRooms[roomId].currentActionItem.description,
             voteResult: votingResultText,
             itemComplete: actionItemComplete,
             displayTime: resultsDisplayTime
