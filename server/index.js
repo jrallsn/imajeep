@@ -167,7 +167,7 @@ wss.on('connection', function connection(ws) {
                 message: oldActionItems
             };
 
-            updateAllClients(gameUpdate);
+            updateAllClients(roomId, gameUpdate);
         });  
     }
 
