@@ -388,7 +388,7 @@ wss.on('connection', function connection(ws) {
         var masterUpdate = {
             info: 'feedbackReceived',
             roomId: roomId,
-            state: activerooms[roomId].state,
+            state: activeRooms[roomId].state,
             whoSubmitted: activeRooms[roomId].feedbackReceived
         };
 
