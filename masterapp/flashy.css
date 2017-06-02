@@ -20,11 +20,15 @@ div {
   align: 'center';
 }
 
-div#actionItem {
+div#section-main {
   font-family: 'Ubuntu', sans-serif;
   font-size: 100px;
   font-weight: bold;
-  font-color: #ffffff;
+}
+
+div#section-secondary {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 60px;
 }
 
 div#roomiddiv {
@@ -85,9 +89,9 @@ input {
 
 div#waiting img {
   position: absolute;
-  top: 20px;
+  bottom: 0px;
   align-self: center;
-  width: 200px;
+  width: 100px;
 }
 
 span.player {
