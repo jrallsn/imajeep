@@ -201,12 +201,12 @@ wss.on('connection', function connection(ws) {
             }
         } else if (activeRooms[roomId].state === GameStates.VOTE_SADS) {
             if (activeRooms[roomId].feedbackItemsToRate.length === 0){
-                endSadsVoting(roomId);
+                endSadsPhase(roomId);
                 return;
             }
         } else if (activeRooms[roomId].state === GameStates.VOTE_HAPPIES) {
             if (activeRooms[roomId].feedbackItemsToRate.length === 0){
-                endHappiesVoting(roomId);
+                endHappiesPhase(roomId);
                 return;
             }
         }
@@ -238,7 +238,13 @@ wss.on('connection', function connection(ws) {
         };
 
         activeRooms[roomId].timer = setTimeout(function(){
-            endVoting(roomId);
+            if (activeRooms[roomId].state === GameStates.REVIEW_ACTION_ITEMS) {
+                endVoting(roomId);
+            } else if (activeRooms[roomId].state === GameStates.VOTE_SADS) {
+                endSadsVoting(roomId);
+            } else if (activeRooms[roomId].state === GameStates.VOTE_HAPPIES) {
+                endHappiesVoting(roomId);
+            }
         }, votingTimeLimit);
 
         updateAllClients(roomId, gameUpdate);
