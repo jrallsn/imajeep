@@ -16,10 +16,13 @@
 		function joinRoom() {
 			var roomIdBox = document.getElementById('roomid');
 			var roomId = roomIdBox.value;
+			var userNameBox = document.getElementById('playername');
+			var userName = userNameBox.value;
 			activeRoomId = roomId;
 
 			exampleSocket.send(JSON.stringify({
 				action: 'join',
+				userName: userName,
 				roomId: roomId
 			}));
 		}
@@ -41,7 +44,8 @@
 		};
 	</script>
 	<br>
-	<input type="text" id="roomid">
+	Player Name: <input type="text" id="playername">
+	Room ID: <input type="text" id="roomid">
 	<button onclick="joinRoom()">Join a room</button>
 	<br>
 	<input type="text" id="messagebox">
