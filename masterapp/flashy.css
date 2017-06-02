@@ -26,6 +26,10 @@ div#actionItem {
   height: 40%;
 }
 
+div#roomiddiv {
+  font-size: 100px;
+}
+
 button {
   border-radius: 15px;
   color: #ffffff;
@@ -36,19 +40,48 @@ button {
   margin: 10px;
 }
 
+button:hover {
+  background-color: #455E69;
+}
+
 i.fa {
-  color: #45B29D;
   font-size: 50px;
   margin: 10px;
+}
+
+i.fa-user {
+  color: #45B29D;
+}
+
+i.fa-check-circle {
+  color: #45B29D;
+}
+
+i.fa-times-circle {
+  color: #DF5A49;
 }
 
 input {
   border-radius: 15px;
   padding: 10px;
-  width: 320px;
-  height: 50px;
+  width: 50%;
+  height: 15%;
   margin: 10px;
   background-color: #EFC94C;
   border: none;
-  font-size: 16px;
+  font-size: 40px;
+  text-align: center;
+}
+
+::placeholder {
+  opacity: 0.3;
+  font-color: #E27A3F;
+  text-align: center;
+}
+
+div#waiting img {
+  position: absolute;
+  top: 20px;
+  align-self: center;
+  width: 200px;
 }
