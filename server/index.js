@@ -561,12 +561,12 @@ wss.on('connection', function connection(ws) {
             activeRooms[roomId].voteReceived[activeRooms[roomId].players[i].playerName] = false;
         }
 
-        startSadsVoting(roomId);
+        startHappiesVoting(roomId);
     }
 
     function startHappiesVoting(roomId) {
         if (activeRooms[roomId].feedbackItemsToRate.length === 0) {
-            endSadsPhase(roomId);
+            endHappiesPhase(roomId);
             return;
         }
 
@@ -591,7 +591,7 @@ wss.on('connection', function connection(ws) {
         };
 
         activeRooms[roomId].timer = setTimeout(function(){
-            endSadsVoting(roomId);
+            endHappiesVoting(roomId);
         }, votingTimeLimit);
 
         updateAllClients(roomId, gameUpdate);
@@ -637,7 +637,7 @@ wss.on('connection', function connection(ws) {
 
         updateMasterClient(roomId, masterUpdate);
 
-        setTimeout(function(){startSadsVoting(roomId);}, resultsDisplayTime);
+        setTimeout(function(){startHappiesVoting(roomId);}, resultsDisplayTime);
     }
 
     function endHappiesPhase (roomId) {
