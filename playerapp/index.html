@@ -75,7 +75,7 @@
     var exampleSocket = new WebSocket("wss://api.seawall.horse/");
     var activeRoomId;
     var reVote = /start.*Voting/;
-    var reVoteEnd = /.*Voting.*Ended/;
+    var reVoteEnd = /.*oting.*Ended/;
     var reDiscuss = /discuss.*/;
     var reSub = /startSubmitting.*/;
 
@@ -85,7 +85,7 @@
     function joinRoom() {
       var roomIdBox = document.getElementById('roomid');
       var userNameBox = document.getElementById('username');
-      var roomId = roomIdBox.value;
+      var roomId = roomIdBox.value.toUpperCase();
       var userName = userNameBox.value;
       activeRoomId = roomId;
       activeUserName = userName;
@@ -129,7 +129,7 @@
       var html = '';
       if (data.info === 'userJoined') {
         html = '<h1>' + data.roomId + '</h1>' +
-          '<p class="status">Welcome, ' + data.userName + '!</p>';
+          '<p class="status">Welcome!</p>';
         document.getElementById('response-div').innerHTML = html;
       } else if (reVote.test(data.info)) {
         // voting starts
