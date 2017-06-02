@@ -35,7 +35,7 @@ function generateId() {
         uid += charSet.charAt(Math.floor(Math.random() * charSet.length));
     }
 
-    return 'JEEP';//uid;
+    return uid;
 }
 
 var activeRooms = {};
