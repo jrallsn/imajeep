@@ -1,8 +1,11 @@
 <html>
 <head>
+  <script src="https://use.fontawesome.com/16b88d82ba.js"></script>
+  <link rel="stylesheet" href="flashy.css" TYPE="text/css"/>
+  <link href="https://fonts.googleapis.com/css?family=Pacifico|Ubuntu" rel="stylesheet">
 </head>
 <body>
-	MASTER APP INDEX
+	<div id="title">MASTER APP INDEX</div>
 
 	<script type="text/javascript">
 		
@@ -14,8 +17,12 @@
 		};
 
 		function createRoom() {
+			var messageBox = document.getElementById('messagebox');
+                        var textToSend = messageBox.value;
+
 			exampleSocket.send(JSON.stringify({
-				action: 'init'
+				action: 'init',
+				message: textToSend
 			}));
 		}
 
@@ -54,37 +61,192 @@
 				case 'WAITING_FOR_PLAYERS':
 					activeRoomId = message.roomId;
 
-					if (message.info === 'playerJoined') {
+					if (message.info === 'userJoined') {
 						players.push({
-							userName: message.info.userName
+							userName: message.userName
 						});
 					}
 					
-					document.getElementById('players').innerHTML = players.toString();
-
+					displayPlayers();
+				
+					break;
+				case 'SHOW_OLD_ACTION_ITEMS_LIST':
+					message.message.forEach(function(action) {
+						document.getElementById('actionList').innerHTML += action.description + "<br>";
+					});
+					break;
+				case 'REVIEW_ACTION_ITEMS':
+					if (message.info === "startVoting") {
+						document.getElementById('beginVoting').style.display = "";
+						document.getElementById('actionItem').innerHTML += message.itemInfo + "<br>";
+						document.getElementById('voteResults').style.display = "none";
+					} else { 
+						document.getElementById('actionItem').innerHTML = "";
+						document.getElementById('beginVoting').style.display = "none";
+						document.getElementById('voteResults').style.display = "";
+						document.getElementById('voteResults').innerHTML = message.voteResult + " voted happy for this item <br>";
+					}
+					break;
+				case 'SHOW_ACTION_ITEMS_RESULTS':
+					document.getElementById('actionResults').style.display = "";
+					document.getElementById('voteResults').style.display = "none";
+					document.getElementById('actionResults').innerHTML = "You completed " + message.actionItemsCompletedNumber + " / " + message.actionItemsTotalNumber + " action items!";
+					break;
+				case 'SUBMIT_SADS':
+					document.getElementById('actionResults').style.display = "none";
+					document.getElementById('voteResults').style.display = "none";
+					document.getElementById('submitSads').style.display = "";
+					break;
+				case 'DISCUSS_SADS':
+					document.getElementById('submitSads').style.display = "none";
+					document.getElementById('discussSads').style.display = "";
+					document.getElementById('sadsList').style.display = "";
+					document.getElementById('sadsVoteButton').style.display = "";
+					message.feedbackItems.forEach(function(feedback) {
+						document.getElementById('sadsList').innerHTML += feedback + "<br>";
+					});
+					break;
+				case 'VOTE_SADS':
+					if (message.info === "startSadsVoting") {
+                                                document.getElementById('beginVoting').style.display = "";
+                                                document.getElementById('actionItem').innerHTML += message.itemInfo + "<br>";
+                                                document.getElementById('voteResults').style.display = "none";
+                                        } else { 
+                                                document.getElementById('actionItem').innerHTML = "";
+                                                document.getElementById('beginVoting').style.display = "none";
+                                                document.getElementById('voteResults').style.display = "";
+                                                document.getElementById('voteResults').innerHTML = message.voteResult + " voted happy for this item <br>";
+                                        }
 					break;
 				default:
 					break;
 			}
 		};
 
+		
+		function displayPlayers() {
+			var allNames = "";
+			players.forEach(function (p) {
+				allNames += p.userName + " ";
+			});
+			document.getElementById('players').innerHTML += newPlayer(players.pop().userName);
+		}
+
+                function newPlayer(player) {
+                        var str = "";
+                        str += "<i class='fa fa-user' aria-hidden='true'></i>" + player + "<br>";
+                        return str;
+                }
+		
+		function everyoneIn() {
+			document.getElementById('createroom').style.display = "none";
+			document.getElementById('roomiddiv').style.display = "none";
+			document.getElementById('response-div').style.display = "none";
+			document.getElementById('players').style.display = "none";
+			document.getElementById('continue').style.display = "none";
+			document.getElementById('feels').style.display = "";
+			exampleSocket.send(JSON.stringify({
+				action: 'allPlayersJoined',
+				roomId: activeRoomId
+			}));
+		}
+		function loadFeels() {
+			document.getElementById('feels').style.display = "none";
+			document.getElementById('feelsMenu').style.display = "";
+			exampleSocket.send(JSON.stringify({
+				action: 'selectGame',
+				roomId: activeRoomId,
+				gameName: 'Feels'
+			}));
+		}
+		function newSprint() {
+			document.getElementById('feelsMenu').style.display = "none";
+			document.getElementById('newSprint').style.display = "";
+		}
+		function sprintNamed() {
+			document.getElementById('newSprint').style.display = "none";
+			document.getElementById('listActionItems').style.display = "";
+			document.getElementById('actionList').style.display = "";
+			document.getElementById('voteButton').style.display = "";
+			var messageBox = document.getElementById('sprintbox');
+			var textToSend = messageBox.value;
+
+			exampleSocket.send(JSON.stringify({
+				action: 'newSprint',
+				roomId: activeRoomId,
+				sprintName: textToSend
+			}));
+		}
+		
+		function beginVoting() {
+			document.getElementById('listActionItems').style.display = "none";
+			document.getElementById('actionList').style.display = "none";
+			document.getElementById('voteButton').style.display = "none";
+			document.getElementById('actionItem').style.display = "";
+			exampleSocket.send(JSON.stringify({
+                                action: 'startActionItems',
+                                roomId: activeRoomId
+                        }));
+		}
+		
+		function sadsVoting() {
+			document.getElementById('discussSads').style.display = "none";
+			document.getElementById('sadsList').style.display = "none";
+			document.getElementById('sadsVoteButton').style.display = "none";	
+			exampleSocket.send(JSON.stringify({
+				action: 'startSadsVoting',
+				roomId: activeRoomId
+			}));
+		}
 
 	</script>
-	<br>
+	<div id="createroom">
 	<button onclick="createRoom()">Create a room</button>
 	<br>
 	<input type="text" id="messagebox">
 	ROOM: <div id="roomiddiv"></div>
 	<button onclick="sendMessage()">Send message</button>
 	<br> 
+	</div>
 	<div id="response-div"></div>
-
-	<div id='players'>
-
+	
+	<div id='players'></div>	
+	<div id='continue'>
+	<button onclick="everyoneIn()">Everyone's in!</button>
 	</div>
 
+	<div id='feels' style="display:none">Select your Game!
+	<button onclick="loadFeels()">#Feels</button></div>
 
+	<div id='feelsMenu' style="display:none">Let's talk about our feelings.
+	<button onclick="gameRules()">Game Rules</button>
+	<button onclick="prevSprint()">Previous Sprints</button>
+	<button onclick="newSprint()">New Sprint</button></div>
+	
+	<div id='newSprint' style="display:none">Give the new Sprint a name.
+	<input type="text" id="sprintbox">
+	<button onclick="sprintNamed()">Enter</button></div>
+	
+	<div id='listActionItems' style="display:none">Here are the incomplete action items</div>
+	
+	<div id='actionList' style="display:none"></div>
+	
+	<div id='voteButton' style="display:none">
+	<button onclick="beginVoting()">Begin Voting</button></div>
+	
+	<div id='actionItem' style='display:none'></div>
+	
+	<div id='beginVoting' style="display:none">Vote on your phones now!</div>
+	
+	<div id='voteResults' style="display:none"></div>
+	
+	<div id='actionResults' style="display:none"></div>	
 
-
+	<div id='submitSads' style="display:none">Start submitting sads!</div>
+	
+	<div id='discussSads' style="display:none">Discuss Sads</div>
+	<div id='sadsList' style="display:none"></div>
+	<div id='sadsVoteButton' style="display:none">
+	<button onclick="sadsVoting()">Vote</button></div>
 </body>
 </html>
