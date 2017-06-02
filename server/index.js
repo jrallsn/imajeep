@@ -158,6 +158,8 @@ wss.on('connection', function connection(ws) {
         activeRooms[roomId].state = GameStates.SHOW_OLD_ACTION_ITEMS_LIST;
         var teamName = activeRooms[roomId].teamName;
 
+	JeepDbAdapter.createSprint(sprintName, teamName);
+
         JeepDbAdapter.getIncompleteActionItems(teamName, function(oldActionItems){
             var gameUpdate = {
                 info: 'oldActionItems',
